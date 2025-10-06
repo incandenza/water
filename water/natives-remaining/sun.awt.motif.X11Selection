@@ -1,0 +1,8 @@
+    static native void init();
+    static native int getAtomForTarget(java.lang.String);
+    static native void registerTargetForFlavor(java.awt.datatransfer.DataFlavor, java.lang.String);
+    native void create(java.lang.String);
+    native void pDispose();
+    native boolean pGetSelectionOwnership();
+    native void pGetTransferTargets();
+    native void pGetTransferData(int[]);

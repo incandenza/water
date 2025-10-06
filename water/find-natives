@@ -1,0 +1,38 @@
+#!/usr/bin/perl
+
+$CLASSES_DIR = '/usr/local/jdk/lib/classes';
+$OUTPUT_DIR = 'natives-list';
+
+@classes = split(' ', `find $CLASSES_DIR -type f`);
+map { s#^$CLASSES_DIR/##; $_; } @classes;
+map { s/\.class$//; $_; } @classes;
+map { s#/#.#g; $_; } @classes;
+
+if(!-d $OUTPUT_DIR) {
+	mkdir $OUTPUT_DIR, 0755 || die "can't create $OUTPUT_DIR: $!";
+}
+if(!-d "$OUTPUT_DIR/.nonatives") {
+	mkdir "$OUTPUT_DIR/.nonatives", 0755 || 
+		die "can't create $OUTPUT_DIR/.nonatives: $!";
+}
+
+$| = 1;
+$i = 0;
+foreach $class (@classes) {
+	print "doing $class ($i of $#classes)...  ";
+	if((-f "$OUTPUT_DIR/$class" && !-z "$OUTPUT_DIR/$class") ||
+	   -f "$OUTPUT_DIR/.nonatives/$class") {
+		print "have results already, skipping.\n";	
+	} else {
+		system "javap -private '$class' | grep native >'$OUTPUT_DIR/$class'";
+		if(-z "$OUTPUT_DIR/$class") {
+			print "no natives.\n";
+			unlink "$OUTPUT_DIR/$class";
+			system "touch '$OUTPUT_DIR/.nonatives/$class'";
+		} else {
+			print "natives found.\n";
+		}
+	}
+	$i++;
+}
+

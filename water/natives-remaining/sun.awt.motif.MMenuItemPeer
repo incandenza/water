@@ -1,0 +1,6 @@
+    boolean nativeCreated;
+    native void createMenuItem(sun.awt.motif.MMenuPeer);
+    native void pSetLabel(java.lang.String);
+    native void pEnable();
+    native void pDisable();
+    native void pDispose();

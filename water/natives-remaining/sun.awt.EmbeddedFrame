@@ -1,0 +1,1 @@
+    protected native void setPeer(java.awt.peer.ComponentPeer);

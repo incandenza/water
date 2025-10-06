@@ -1,0 +1,9 @@
+    public native void init();
+    public native void run();
+    static native java.awt.image.ColorModel makeColorModel();
+    public native int getScreenResolution();
+    protected native int getScreenWidth();
+    protected native int getScreenHeight();
+    public native void sync();
+    public native void beep();
+    public native void loadSystemColors(int[]);

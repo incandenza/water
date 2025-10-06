@@ -1,0 +1,8 @@
+    public static final native int getState();
+    static final native boolean threadsSuspended();
+    public static native void unsuspendThreads();
+    public static native void unsuspendSomeThreads();
+    public static native void resumeJavaMonitor();
+    public static native void suspendJavaMonitor();
+    public static native void resetJavaMonitor();
+    public static native void writeJavaMonitorReport();

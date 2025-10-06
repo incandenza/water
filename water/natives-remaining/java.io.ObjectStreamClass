@@ -1,0 +1,8 @@
+    private static native int getClassAccess(java.lang.Class);
+    private static native java.lang.String getMethodSignatures(java.lang.Class)[];
+    private static native int getMethodAccess(java.lang.Class, java.lang.String);
+    private static native java.lang.String getFieldSignatures(java.lang.Class)[];
+    private static native int getFieldAccess(java.lang.Class, java.lang.String);
+    private native java.io.ObjectStreamField getFields0(java.lang.Class)[];
+    private static native long getSerialVersionUID(java.lang.Class);
+    private static native boolean hasWriteObject(java.lang.Class);

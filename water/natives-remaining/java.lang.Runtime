@@ -1,0 +1,6 @@
+    private static native void runFinalizersOnExit0(boolean);
+    private native java.lang.Process execInternal(java.lang.String[], java.lang.String[]);
+    public native long freeMemory();
+    public native long totalMemory();
+    public native void gc();
+    public native void runFinalization();

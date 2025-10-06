@@ -1,0 +1,345 @@
+call.c:406:    wenv->exception_thrown = 0;
+call.c:407:    wenv->call_depth++;
+call.c:413:    wenv->call_depth--;
+call.c:421:    unsigned char *old_frame_top = wenv->frame_top;
+call.c:433:    unsigned char *debug_orig_frame_top = wenv->frame_top;
+call.c:434:    waterObject *debug_orig_running_object = wenv->running_object;
+call.c:435:    waterMethod *debug_orig_running_method = wenv->running_method;
+call.c:436:    int debug_orig_pc = wenv->pc;
+call.c:438:    unsigned char *debug_orig_opstack_top = wenv->opstack_top;
+call.c:460:		wenv->call_depth, 
+call.c:479:	wenv->frame_top = wenv->opstack_top - method->args_size;
+call.c:480:	assert(wenv->frame_top >= wenv->stack_top);
+call.c:482:	wenv->frame_top = wenv->opstack_top;
+call.c:490:	    wenv->frame_top);
+call.c:496:	    wenv->opstack_top);
+call.c:500:    memset(wenv->opstack_top, 0, method->locals_size);
+call.c:501:    wenv->opstack_top += method->locals_size;
+call.c:506:	    wenv->opstack_top);
+call.c:517:	    old_frame_top, wenv->running_object, 
+call.c:518:	    wenv->running_method, wenv->pc);
+call.c:520:    opstack_push_reference(wenv->opstack_top, &old_frame_top);
+call.c:521:    opstack_push_reference(wenv->opstack_top, &wenv->running_object);
+call.c:522:    opstack_push_reference(wenv->opstack_top, &wenv->running_method);
+call.c:523:    opstack_push_int(wenv->opstack_top, &wenv->pc);
+call.c:528:	    wenv->opstack_top);
+call.c:534:	    wenv->frame_top);
+call.c:538:    wenv->running_object = object;
+call.c:539:    wenv->running_method = method;
+call.c:540:    wenv->pc = 0;
+call.c:547:    while(wenv->exception_thrown) {
+call.c:554:	wenv->exception_thrown = 0;
+call.c:557:	opstack_pop_reference(wenv->opstack_top, &exception_object);
+call.c:558:	opstack_push_reference(wenv->opstack_top, &exception_object);
+call.c:590:	       wenv->pc >= exception_info->start_pc &&
+call.c:591:	       wenv->pc < exception_info->end_pc) {
+call.c:596:		wenv->pc = exception_info->handler_pc;
+call.c:602:	    wenv->exception_thrown = 1;
+call.c:611:	opstack_pop_reference(wenv->opstack_top, &result);
+call.c:616:		opstack_pop_double_word(wenv->opstack_top, &result);
+call.c:618:		opstack_pop_word(wenv->opstack_top, &result);
+call.c:627:	    wenv->frame_top);
+call.c:629:    wenv->opstack_top = 
+call.c:630:	wenv->frame_top + method->args_size + method->locals_size + 4*4;
+call.c:635:	    wenv->opstack_top);
+call.c:637:    opstack_pop_int(wenv->opstack_top, &wenv->pc);
+call.c:638:    opstack_pop_reference(wenv->opstack_top, &wenv->running_method);
+call.c:639:    opstack_pop_reference(wenv->opstack_top, &wenv->running_object);
+call.c:640:    opstack_pop_reference(wenv->opstack_top, &wenv->frame_top);
+call.c:643:    wenv->opstack_top -= (method->args_size + method->locals_size);
+call.c:650:	    old_frame_top, wenv->running_object, 
+call.c:651:	    wenv->running_method, wenv->pc);
+call.c:657:	assert(wenv->opstack_top == 
+call.c:660:	assert(wenv->opstack_top == debug_orig_opstack_top);
+call.c:666:	opstack_push_reference(wenv->opstack_top, &result);
+call.c:671:		opstack_push_double_word(wenv->opstack_top, &result);
+call.c:673:		opstack_push_word(wenv->opstack_top, &result);
+call.c:684:    assert(wenv->frame_top == debug_orig_frame_top);
+call.c:685:    assert(wenv->running_object == debug_orig_running_object);
+call.c:686:    assert(wenv->running_method == debug_orig_running_method);
+call.c:687:    assert(wenv->pc == debug_orig_pc);
+call.c:694:		wenv->call_depth, 
+call.c:717:    unsigned char *debug_orig_frame_top = wenv->frame_top;
+call.c:718:    waterObject *debug_orig_running_object = wenv->running_object;
+call.c:719:    waterMethod *debug_orig_running_method = wenv->running_method;
+call.c:720:    int debug_orig_pc = wenv->pc;
+call.c:722:    unsigned char *debug_orig_opstack_top = wenv->opstack_top;
+call.c:738:    old_frame_top = wenv->frame_top;
+call.c:740:	wenv->frame_top = wenv->opstack_top - method->args_size;
+call.c:742:	wenv->frame_top = wenv->opstack_top;
+call.c:747:    opstack_push_reference(wenv->opstack_top, &old_frame_top);
+call.c:748:    opstack_push_reference(wenv->opstack_top, &wenv->running_object);
+call.c:749:    opstack_push_reference(wenv->opstack_top, &wenv->running_method);
+call.c:750:    opstack_push_int(wenv->opstack_top, &wenv->pc);
+call.c:752:    wenv->running_method = method;
+call.c:753:    wenv->running_object = object;
+call.c:754:    wenv->pc = 0;
+call.c:772:			    wenv->opstack_top - method->args_size - 16, 
+call.c:774:			    wenv->opstack_top, method->return_type,
+call.c:775:			    &wenv->exception_thrown);
+call.c:779:			    wenv->opstack_top - method->args_size + 4 - 16, 
+call.c:781:			    wenv->opstack_top, method->return_type,
+call.c:782:			    &wenv->exception_thrown);
+call.c:785:    if(wenv->exception_thrown) {
+call.c:790:	opstack_pop_reference(wenv->opstack_top, &exception_object);
+call.c:797:		wenv->opstack_top += 8;
+call.c:798:		opstack_pop_double_word(wenv->opstack_top, &result);
+call.c:800:		wenv->opstack_top += 4;
+call.c:801:		opstack_pop_word(wenv->opstack_top, &result);
+call.c:806:    wenv->opstack_top = wenv->frame_top + method->args_size + 4*4;
+call.c:807:    opstack_pop_int(wenv->opstack_top, &wenv->pc);
+call.c:808:    opstack_pop_reference(wenv->opstack_top, &wenv->running_method);
+call.c:809:    opstack_pop_reference(wenv->opstack_top, &wenv->running_object);
+call.c:810:    opstack_pop_reference(wenv->opstack_top, &wenv->frame_top);
+call.c:813:    wenv->opstack_top -= method->args_size;
+call.c:818:	assert(wenv->opstack_top == 
+call.c:821:	assert(wenv->opstack_top == debug_orig_opstack_top);
+call.c:828:	opstack_push_reference(wenv->opstack_top, &exception_object);
+call.c:832:	    opstack_push_double_word(wenv->opstack_top, &result);
+call.c:834:	    opstack_push_word(wenv->opstack_top, &result);
+call.c:840:    assert(wenv->frame_top == debug_orig_frame_top);
+call.c:841:    assert(wenv->running_object == debug_orig_running_object);
+call.c:842:    assert(wenv->running_method == debug_orig_running_method);
+call.c:843:    assert(wenv->pc == debug_orig_pc);
+call.c:856:	opstack_push_reference(wenv->opstack_top, &object);
+call.c:864:	opstack_push_word(wenv->opstack_top, &arg);
+call.c:868:	    opstack_push_word(wenv->opstack_top, ((char *)&arg+4));
+call.c:888:    opstack_pop_reference(wenv->opstack_top, &exception_object);
+classes.c:512:    if(!wenv->classpath_entries) {
+classes.c:513:	wenv->tokenized_classpath = strdup(wenv->classpath);
+classes.c:514:	if(!wenv->tokenized_classpath) {
+classes.c:519:	wenv->classpath_entries = 
+classes.c:523:	wenv->classpath_entries[i] = strsep(&wenv->tokenized_classpath, ":");
+classes.c:524:	while((wenv->classpath_entries[++i] = 
+classes.c:525:	       strsep(&wenv->tokenized_classpath, ":")) != 0) {}
+classes.c:528:    return wenv->classpath_entries;
+classes.c:1857:	while(i < wenv->wvm->num_native_libs &&
+classes.c:1859:	    method->native_code = dlsym(wenv->wvm->native_libs[i],
+classes.c:2039:    case(JNI_BOOLEAN):	        class_slot = &wenv->boolean_class; break;
+classes.c:2040:    case(JNI_BYTE):	        class_slot = &wenv->byte_class; break;
+classes.c:2041:    case(JNI_CHAR):	        class_slot = &wenv->char_class; break;
+classes.c:2042:    case(JNI_SHORT):	        class_slot = &wenv->short_class; break;
+classes.c:2043:    case(JNI_INT):	        class_slot = &wenv->int_class; break;
+classes.c:2044:    case(JNI_LONG):	        class_slot = &wenv->long_class; break;
+classes.c:2045:    case(JNI_FLOAT):	        class_slot = &wenv->float_class; break;
+classes.c:2046:    case(JNI_DOUBLE):	        class_slot = &wenv->double_class; break;
+classes.c:2247:	    return target == wenv->java_lang_object_class;
+classes.c:2263:	    return target == wenv->java_lang_object_class;
+classes.c:2268:	    return target == wenv->java_lang_cloneable_interface;
+create.c:288:    wenv->next = 0;
+create.c:289:    wenv->hooks = &water_jnienv_hooks;
+create.c:290:    wenv->wvm = WATER_VM(vm);
+create.c:293:    wenv->classpath = getenv("CLASSPATH");
+create.c:294:    if(!wenv->classpath)
+create.c:295:	wenv->classpath = "";
+create.c:297:    water_createStack(&wenv->stack, &wenv->stack_top, &wenv->stack_end);
+create.c:298:    if(!wenv->stack)
+create.c:300:    wenv->opstack_top = wenv->stack_top;
+create.c:302:    wenv->exception_thrown = 0;
+create.c:303:    wenv->call_depth = 0;
+create.c:308:    wenv->java_lang_object_class =
+create.c:311:    wenv->java_lang_string_class = 
+create.c:314:    wenv->java_lang_class_class = 
+create.c:317:    wenv->java_lang_throwable_class = 
+create.c:320:    wenv->java_lang_cloneable_interface = 
+create.c:323:    if(!wenv->java_lang_object_class ||
+create.c:324:       !wenv->java_lang_string_class ||
+create.c:325:       !wenv->java_lang_class_class ||
+create.c:326:       !wenv->java_lang_throwable_class ||
+create.c:327:       !wenv->java_lang_cloneable_interface) {
+create.c:333:    if(water_raiseState(JNIENV(wenv), wenv->java_lang_object_class, 
+create.c:337:    if(water_raiseState(JNIENV(wenv), wenv->java_lang_string_class, 
+create.c:341:    if(water_raiseState(JNIENV(wenv), wenv->java_lang_class_class, 
+create.c:345:    if(water_raiseState(JNIENV(wenv), wenv->java_lang_throwable_class, 
+create.c:349:    if(water_raiseState(JNIENV(wenv), wenv->java_lang_cloneable_interface, 
+create.c:354:    wenv->thread_status = THREAD_ALIVE;
+create.c:365:    if(wenv->prev) {
+create.c:366:	((water_JNIEnv *)wenv->prev)->next = wenv->next;
+create.c:370:    if(wenv->tokenized_classpath) {
+create.c:371:	free(wenv->tokenized_classpath);
+create.c:374:    if(wenv->classpath_entries) {
+create.c:375:	free(wenv->classpath_entries);
+create.c:381:    water_freeStack(wenv->stack);
+exception.c:152:	    exception_object, wenv->opstack_top);
+exception.c:155:    opstack_push_reference(wenv->opstack_top, &exception_object);
+exception.c:156:    wenv->exception_thrown = 1;
+exec-instr-macros.c:34:#define WENV_PC (wenv->pc)
+exec-instr-macros.c:35:#define WENV_OPSTACK_TOP (wenv->opstack_top)
+exec-instr-macros.c:36:#define WENV_FRAME_TOP (wenv->frame_top)
+exec-instr-macros.c:37:#define WENV_RUNNING_CODE (wenv->running_method->code->code)
+exec-instr-macros.c:38:#define WENV_RUNNING_CLASS (wenv->running_method->class)
+exec-instr-macros.c:279:	if(wenv->exception_thrown) { \
+exec-instr-macros.c:324:	if(wenv->exception_thrown) { \
+exec-instr-macros.c:364:    assert(wenv->running_method->code->max_locals > index); \
+exec-instr-macros.c:377:    assert(wenv->running_method->code->max_locals > index); \
+exec-instr-macros.c:390:    assert(wenv->running_method->code->max_locals > index); \
+exec-instr-macros.c:403:    assert(wenv->running_method->code->max_locals > index); \
+exec-instr-macros.c:416:    assert(wenv->running_method->code->max_locals > index); \
+exec-instr-macros.c:426:    assert(wenv->running_method->code->max_locals > 0); \
+exec-instr-macros.c:436:    assert(wenv->running_method->code->max_locals > 1); \
+exec-instr-macros.c:446:    assert(wenv->running_method->code->max_locals > 2); \
+exec-instr-macros.c:456:    assert(wenv->running_method->code->max_locals > 3); \
+exec-instr-macros.c:466:    assert(wenv->running_method->code->max_locals > 0); \
+exec-instr-macros.c:476:    assert(wenv->running_method->code->max_locals > 1); \
+exec-instr-macros.c:486:    assert(wenv->running_method->code->max_locals > 2); \
+exec-instr-macros.c:496:    assert(wenv->running_method->code->max_locals > 3); \
+exec-instr-macros.c:506:    assert(wenv->running_method->code->max_locals > 0); \
+exec-instr-macros.c:516:    assert(wenv->running_method->code->max_locals > 1); \
+exec-instr-macros.c:526:    assert(wenv->running_method->code->max_locals > 2); \
+exec-instr-macros.c:536:    assert(wenv->running_method->code->max_locals > 3); \
+exec-instr-macros.c:546:    assert(wenv->running_method->code->max_locals > 0); \
+exec-instr-macros.c:556:    assert(wenv->running_method->code->max_locals > 1); \
+exec-instr-macros.c:566:    assert(wenv->running_method->code->max_locals > 2); \
+exec-instr-macros.c:576:    assert(wenv->running_method->code->max_locals > 3); \
+exec-instr-macros.c:587:    assert(wenv->running_method->code->max_locals > 0); \
+exec-instr-macros.c:597:    assert(wenv->running_method->code->max_locals > 1); \
+exec-instr-macros.c:607:    assert(wenv->running_method->code->max_locals > 2); \
+exec-instr-macros.c:617:    assert(wenv->running_method->code->max_locals > 3); \
+exec-instr-macros.c:901:    assert(wenv->running_method->code->max_locals > index); \
+exec-instr-macros.c:914:    assert(wenv->running_method->code->max_locals > index); \
+exec-instr-macros.c:927:    assert(wenv->running_method->code->max_locals > index); \
+exec-instr-macros.c:940:    assert(wenv->running_method->code->max_locals > index); \
+exec-instr-macros.c:953:    assert(wenv->running_method->code->max_locals > index); \
+exec-instr-macros.c:963:    assert(wenv->running_method->code->max_locals > 0); \
+exec-instr-macros.c:973:    assert(wenv->running_method->code->max_locals > 1); \
+exec-instr-macros.c:983:    assert(wenv->running_method->code->max_locals > 2); \
+exec-instr-macros.c:993:    assert(wenv->running_method->code->max_locals > 3); \
+exec-instr-macros.c:1003:    assert(wenv->running_method->code->max_locals > 0); \
+exec-instr-macros.c:1013:    assert(wenv->running_method->code->max_locals > 1); \
+exec-instr-macros.c:1023:    assert(wenv->running_method->code->max_locals > 2); \
+exec-instr-macros.c:1033:    assert(wenv->running_method->code->max_locals > 3); \
+exec-instr-macros.c:1043:    assert(wenv->running_method->code->max_locals > 0); \
+exec-instr-macros.c:1053:    assert(wenv->running_method->code->max_locals > 1); \
+exec-instr-macros.c:1063:    assert(wenv->running_method->code->max_locals > 2); \
+exec-instr-macros.c:1073:    assert(wenv->running_method->code->max_locals > 3); \
+exec-instr-macros.c:1083:    assert(wenv->running_method->code->max_locals > 0); \
+exec-instr-macros.c:1093:    assert(wenv->running_method->code->max_locals > 1); \
+exec-instr-macros.c:1103:    assert(wenv->running_method->code->max_locals > 2); \
+exec-instr-macros.c:1113:    assert(wenv->running_method->code->max_locals > 3); \
+exec-instr-macros.c:1123:    assert(wenv->running_method->code->max_locals > 0); \
+exec-instr-macros.c:1133:    assert(wenv->running_method->code->max_locals > 1); \
+exec-instr-macros.c:1143:    assert(wenv->running_method->code->max_locals > 2); \
+exec-instr-macros.c:1153:    assert(wenv->running_method->code->max_locals > 3); \
+exec-instr-macros.c:3079:    if(wenv->exception_thrown) { \
+exec-instr-macros.c:3123:    if(wenv->exception_thrown) { \
+exec-instr-macros.c:3157:    if(wenv->exception_thrown) { \
+exec-instr-macros.c:3211:    if(wenv->exception_thrown) { \
+exec-instr-macros.c:3231:    if(wenv->exception_thrown) { \
+exec-instr-macros.c:3258:    if(wenv->exception_thrown) { \
+exec-instr-macros.c:3285:    if(wenv->exception_thrown) { \
+exec-instr-macros.c:3294:    if(wenv->exception_thrown) { \
+exec-instr-macros.c:3333:    wenv->exception_thrown = 1; \
+exec-instr-macros.c:3489:	    assert(wenv->running_method->code->max_locals > index); \
+exec-instr-macros.c:3494:	    assert(wenv->running_method->code->max_locals > index); \
+exec-instr-macros.c:3499:	    assert(wenv->running_method->code->max_locals > index); \
+exec-instr-macros.c:3504:	    assert(wenv->running_method->code->max_locals > index); \
+exec-instr-macros.c:3510:	    assert(wenv->running_method->code->max_locals > index); \
+exec-instr-macros.c:3516:	    assert(wenv->running_method->code->max_locals > index); \
+exec-instr-macros.c:3521:	    assert(wenv->running_method->code->max_locals > index); \
+exec-instr-macros.c:3526:	    assert(wenv->running_method->code->max_locals > index); \
+exec-instr-macros.c:3531:	    assert(wenv->running_method->code->max_locals > index); \
+exec-instr-macros.c:3537:	    assert(wenv->running_method->code->max_locals > index); \
+exec-instr-macros.c:3597:    if(wenv->exception_thrown) { \
+exec-instr-pre.c:33:#define WENV_PC (wenv->pc)
+exec-instr-pre.c:34:#define WENV_OPSTACK_TOP (wenv->opstack_top)
+exec-instr-pre.c:35:#define WENV_FRAME_TOP (wenv->frame_top)
+exec-instr-pre.c:36:#define WENV_RUNNING_CODE (wenv->running_method->code->code)
+exec-instr-pre.c:37:#define WENV_RUNNING_CLASS (wenv->running_method->class)
+exec-instr-pre.c:279:	if(wenv->exception_thrown) {
+exec-instr-pre.c:324:	if(wenv->exception_thrown) {
+exec-instr-pre.c:364:    assert(wenv->running_method->code->max_locals > index);
+exec-instr-pre.c:377:    assert(wenv->running_method->code->max_locals > index);
+exec-instr-pre.c:390:    assert(wenv->running_method->code->max_locals > index);
+exec-instr-pre.c:403:    assert(wenv->running_method->code->max_locals > index);
+exec-instr-pre.c:416:    assert(wenv->running_method->code->max_locals > index);
+exec-instr-pre.c:426:    assert(wenv->running_method->code->max_locals > 0);
+exec-instr-pre.c:436:    assert(wenv->running_method->code->max_locals > 1);
+exec-instr-pre.c:446:    assert(wenv->running_method->code->max_locals > 2);
+exec-instr-pre.c:456:    assert(wenv->running_method->code->max_locals > 3);
+exec-instr-pre.c:466:    assert(wenv->running_method->code->max_locals > 0);
+exec-instr-pre.c:476:    assert(wenv->running_method->code->max_locals > 1);
+exec-instr-pre.c:486:    assert(wenv->running_method->code->max_locals > 2);
+exec-instr-pre.c:496:    assert(wenv->running_method->code->max_locals > 3);
+exec-instr-pre.c:506:    assert(wenv->running_method->code->max_locals > 0);
+exec-instr-pre.c:516:    assert(wenv->running_method->code->max_locals > 1);
+exec-instr-pre.c:526:    assert(wenv->running_method->code->max_locals > 2);
+exec-instr-pre.c:536:    assert(wenv->running_method->code->max_locals > 3);
+exec-instr-pre.c:546:    assert(wenv->running_method->code->max_locals > 0);
+exec-instr-pre.c:556:    assert(wenv->running_method->code->max_locals > 1);
+exec-instr-pre.c:566:    assert(wenv->running_method->code->max_locals > 2);
+exec-instr-pre.c:576:    assert(wenv->running_method->code->max_locals > 3);
+exec-instr-pre.c:587:    assert(wenv->running_method->code->max_locals > 0);
+exec-instr-pre.c:597:    assert(wenv->running_method->code->max_locals > 1);
+exec-instr-pre.c:607:    assert(wenv->running_method->code->max_locals > 2);
+exec-instr-pre.c:617:    assert(wenv->running_method->code->max_locals > 3);
+exec-instr-pre.c:901:    assert(wenv->running_method->code->max_locals > index);
+exec-instr-pre.c:914:    assert(wenv->running_method->code->max_locals > index);
+exec-instr-pre.c:927:    assert(wenv->running_method->code->max_locals > index);
+exec-instr-pre.c:940:    assert(wenv->running_method->code->max_locals > index);
+exec-instr-pre.c:953:    assert(wenv->running_method->code->max_locals > index);
+exec-instr-pre.c:963:    assert(wenv->running_method->code->max_locals > 0);
+exec-instr-pre.c:973:    assert(wenv->running_method->code->max_locals > 1);
+exec-instr-pre.c:983:    assert(wenv->running_method->code->max_locals > 2);
+exec-instr-pre.c:993:    assert(wenv->running_method->code->max_locals > 3);
+exec-instr-pre.c:1003:    assert(wenv->running_method->code->max_locals > 0);
+exec-instr-pre.c:1013:    assert(wenv->running_method->code->max_locals > 1);
+exec-instr-pre.c:1023:    assert(wenv->running_method->code->max_locals > 2);
+exec-instr-pre.c:1033:    assert(wenv->running_method->code->max_locals > 3);
+exec-instr-pre.c:1043:    assert(wenv->running_method->code->max_locals > 0);
+exec-instr-pre.c:1053:    assert(wenv->running_method->code->max_locals > 1);
+exec-instr-pre.c:1063:    assert(wenv->running_method->code->max_locals > 2);
+exec-instr-pre.c:1073:    assert(wenv->running_method->code->max_locals > 3);
+exec-instr-pre.c:1083:    assert(wenv->running_method->code->max_locals > 0);
+exec-instr-pre.c:1093:    assert(wenv->running_method->code->max_locals > 1);
+exec-instr-pre.c:1103:    assert(wenv->running_method->code->max_locals > 2);
+exec-instr-pre.c:1113:    assert(wenv->running_method->code->max_locals > 3);
+exec-instr-pre.c:1123:    assert(wenv->running_method->code->max_locals > 0);
+exec-instr-pre.c:1133:    assert(wenv->running_method->code->max_locals > 1);
+exec-instr-pre.c:1143:    assert(wenv->running_method->code->max_locals > 2);
+exec-instr-pre.c:1153:    assert(wenv->running_method->code->max_locals > 3);
+exec-instr-pre.c:3079:    if(wenv->exception_thrown) {
+exec-instr-pre.c:3126:    if(wenv->exception_thrown) {
+exec-instr-pre.c:3160:    if(wenv->exception_thrown) {
+exec-instr-pre.c:3214:    if(wenv->exception_thrown) {
+exec-instr-pre.c:3234:    if(wenv->exception_thrown) {
+exec-instr-pre.c:3261:    if(wenv->exception_thrown) {
+exec-instr-pre.c:3288:    if(wenv->exception_thrown) {
+exec-instr-pre.c:3297:    if(wenv->exception_thrown) {
+exec-instr-pre.c:3336:    wenv->exception_thrown = 1;
+exec-instr-pre.c:3492:	    assert(wenv->running_method->code->max_locals > index);
+exec-instr-pre.c:3497:	    assert(wenv->running_method->code->max_locals > index);
+exec-instr-pre.c:3502:	    assert(wenv->running_method->code->max_locals > index);
+exec-instr-pre.c:3507:	    assert(wenv->running_method->code->max_locals > index);
+exec-instr-pre.c:3513:	    assert(wenv->running_method->code->max_locals > index);
+exec-instr-pre.c:3519:	    assert(wenv->running_method->code->max_locals > index);
+exec-instr-pre.c:3524:	    assert(wenv->running_method->code->max_locals > index);
+exec-instr-pre.c:3529:	    assert(wenv->running_method->code->max_locals > index);
+exec-instr-pre.c:3534:	    assert(wenv->running_method->code->max_locals > index);
+exec-instr-pre.c:3540:	    assert(wenv->running_method->code->max_locals > index);
+exec-instr-pre.c:3600:    if(wenv->exception_thrown) {
+exec.c:41:/* GRAB_LOCAL_STUFF/SAVE_LOCAL_STUFF makes the wenv->* stuff that we */
+exec.c:53:    opstack_top = wenv->opstack_top;                    \
+exec.c:57:    wenv->pc = pc;                                      \
+exec.c:58:    wenv->opstack_top = opstack_top;                    \
+exec.c:121:    pc = wenv->pc;
+exec.c:122:    frame_top = wenv->frame_top;
+exec.c:123:    running_code = wenv->running_method->code->code;
+exec.c:124:    running_class = wenv->running_method->class;
+exec.c:132:	    water_getClassName(wenv->running_method->class,
+exec.c:133:			       wenv->running_method->class->this_class);
+exec.c:136:	    water_UTF8ToNormal(wenv->running_method->name);
+exec.c:138:	    water_UTF8ToNormal(wenv->running_method->descriptor);
+exec.c:139:	int old_pc = wenv->pc;
+exec.c:143:		    wenv->call_depth, invocation_num, instructions_executed,
+exec.c:144:		    instruction_hooks[wenv->running_method->code->
+exec.c:145:				     code[wenv->pc]].name,
+exec.c:147:		    wenv->pc);
+exec.c:156:	switch(wenv->running_method->code->code[wenv->pc]) {
+exec.c:168:	    instruction_hooks[wenv->running_method->code->code[wenv->pc]].
+exec.c:179:		    wenv->call_depth, invocation_num, instructions_executed,
+exec.c:180:		    instruction_hooks[wenv->running_method->code->code[old_pc]].
+objects.c:335:    assert(wenv->java_lang_class_class);
+objects.c:336:    new_class_object = water_newObject(env, wenv->java_lang_class_class);
+objects.c:341:    *((waterClass **)&new_class_object->data[wenv->java_lang_class_class->
+objects.c:361:    assert(wenv->java_lang_string_class);
+objects.c:362:    new_string = water_newObject(env, wenv->java_lang_string_class);

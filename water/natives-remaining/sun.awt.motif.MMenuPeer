@@ -1,0 +1,3 @@
+    native void createMenu(sun.awt.motif.MMenuBarPeer);
+    native void createSubMenu(sun.awt.motif.MMenuPeer);
+    native void pDispose();

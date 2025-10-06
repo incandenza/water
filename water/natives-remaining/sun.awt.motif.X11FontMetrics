@@ -1,0 +1,3 @@
+    private native int getMFCharSegmentWidth(java.awt.Font, sun.awt.FontDescriptor, byte[], int);
+    public native int bytesWidth(byte[], int, int);
+    native void init();

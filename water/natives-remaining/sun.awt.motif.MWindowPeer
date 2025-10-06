@@ -1,0 +1,6 @@
+    native void create(sun.awt.motif.MComponentPeer);
+    native void pShow();
+    native void pHide();
+    native void pReshape(int, int, int, int);
+    native void pDispose();
+    public native void toBack();

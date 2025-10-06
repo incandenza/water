@@ -1,0 +1,3 @@
+    native void create(sun.awt.motif.MComponentPeer);
+    public native void setText(java.lang.String);
+    public native void setAlignment(int);

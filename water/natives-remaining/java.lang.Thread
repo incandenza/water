@@ -1,0 +1,6 @@
+    private native boolean isInterrupted(boolean);
+    private native void setPriority0(int);
+    private native void stop0(java.lang.Object);
+    private native void suspend0();
+    private native void resume0();
+    private native void interrupt0();

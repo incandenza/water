@@ -1,0 +1,2 @@
+    native void create(sun.awt.motif.MComponentPeer, java.lang.Object);
+    native void NEFcreate(sun.awt.motif.MComponentPeer, java.lang.Object, int);

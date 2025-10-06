@@ -1,0 +1,2 @@
+    native int setBreakpoint(int);
+    native void clrBreakpoint(int, int);

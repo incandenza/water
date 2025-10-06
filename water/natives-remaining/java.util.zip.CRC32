@@ -1,0 +1,2 @@
+    public native void update(byte[], int, int);
+    private native void update1(int);

@@ -1,0 +1,7 @@
+    native void create(sun.awt.motif.MComponentPeer);
+    native void pReshape(int, int, int, int);
+    native void pDispose();
+    native void pShow();
+    native void pHide();
+    native void setFileEntry(java.lang.String, java.lang.String);
+    public native void setFont(java.awt.Font);

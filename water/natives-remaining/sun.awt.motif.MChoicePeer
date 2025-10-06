@@ -1,0 +1,8 @@
+    native void create(sun.awt.motif.MComponentPeer);
+    native void pReshape(int, int, int, int);
+    public native void select(int);
+    public native void setFont(java.awt.Font);
+    public native void remove(int);
+    public native void addItem(java.lang.String, int);
+    public native void setBackground(java.awt.Color);
+    public native void setForeground(java.awt.Color);

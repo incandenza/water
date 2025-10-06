@@ -1,0 +1,2 @@
+    public native int getModifiers();
+    public native java.lang.Object newInstance(java.lang.Object[]);

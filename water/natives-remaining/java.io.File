@@ -1,0 +1,3 @@
+    private native boolean canWrite0();
+    private native boolean canRead0();
+    private native java.lang.String canonPath(java.lang.String);

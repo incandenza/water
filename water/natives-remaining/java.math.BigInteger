@@ -1,0 +1,12 @@
+    private static native void plumbInit();
+    private static native byte plumbAdd(byte[], byte[])[];
+    private static native java.math.BigInteger plumbSubtract(byte[], byte[]);
+    private static native byte plumbMultiply(byte[], byte[])[];
+    private static native byte plumbDivide(byte[], byte[])[];
+    private static native byte plumbRemainder(byte[], byte[])[];
+    private static native byte plumbDivideAndRemainder(byte[], byte[])[][];
+    private static native byte plumbGcd(byte[], byte[])[];
+    private static native byte plumbModPow(byte[], byte[], byte[])[];
+    private static native byte plumbModInverse(byte[], byte[])[];
+    private static native byte plumbSquare(byte[])[];
+    private static native byte plumbGeneratePrime(byte[])[];

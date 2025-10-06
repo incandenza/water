@@ -1,0 +1,7 @@
+    public native int lock();
+    public native void unlock();
+    public native int getDisplay();
+    public native int getDrawable();
+    public native int getDepth();
+    public native int getVisualID();
+    public native int getColormapID();

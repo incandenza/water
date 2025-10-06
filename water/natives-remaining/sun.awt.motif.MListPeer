@@ -1,0 +1,9 @@
+    native void create(sun.awt.motif.MComponentPeer);
+    native void pDispose();
+    public native void setMultipleSelections(boolean);
+    public native boolean isSelected(int);
+    public native void addItem(java.lang.String, int);
+    public native void delItems(int, int);
+    public native void select(int);
+    public native void deselect(int);
+    public native void makeVisible(int);

@@ -1,0 +1,89 @@
+define stacktop
+p wenv->opstack_top
+end
+
+define frametop
+p wenv->frame_top
+end
+
+define framesize
+p (wenv->opstack_top - wenv->frame_top) / 4
+end
+
+define stacksize
+p (wenv->opstack_top - wenv->stack) / 4
+end
+
+define stackint
+p wenv->opstack_top - 4 * ($arg0 + 1)
+p *((int *)(wenv->opstack_top - 4 * ($arg0 + 1)))
+end
+
+define stackptr
+p wenv->opstack_top - 4 * ($arg0 + 1)
+p (void *)*(wenv->opstack_top - 4 * ($arg0 + 1))
+end
+
+define stackobj
+p wenv->opstack_top - 4 * ($arg0 + 1)
+p (void *)*(wenv->opstack_top - 4 * ($arg0 + 1))
+p *(waterObject *)*(wenv->opstack_top - 4 * ($arg0 + 1))
+end
+
+define stackobjclass
+p wenv->opstack_top - 4 * ($arg0 + 1)
+p (void *)*(wenv->opstack_top - 4 * ($arg0 + 1))
+p *(waterObject *)*(wenv->opstack_top - 4 * ($arg0 + 1))
+p ((waterClass *)((waterObject *)*(wenv->opstack_top - 4 * ($arg0 + 1)))->class)->constant_pool[((waterClass *)((waterObject *)*(wenv->opstack_top - 4 * ($arg0 + 1)))->class)->constant_pool[((waterClass *)((waterObject *)*(wenv->opstack_top - 4 * ($arg0 + 1)))->class)->this_class].value.class.class_index].value.utf8_value.contents
+end
+
+define frameobjclass
+p wenv->frame_top + 4 * ($arg0)
+p (void *)*(wenv->frame_top + 4 * ($arg0))
+p *(waterObject *)*(wenv->frame_top + 4 * ($arg0))
+p ((waterClass *)((waterObject *)*(wenv->frame_top + 4 * ($arg0)))->class)->constant_pool[((waterClass *)((waterObject *)*(wenv->frame_top + 4 * ($arg0)))->class)->constant_pool[((waterClass *)((waterObject *)*(wenv->frame_top + 4 * ($arg0)))->class)->this_class].value.class.class_index].value.utf8_value.contents
+end
+
+define classname
+p ((waterClass *)$arg0)->constant_pool[((waterClass *)$arg0)->constant_pool[((waterClass *)$arg0)->this_class].value.class.class_index].value.utf8_value.contents
+end
+
+define followref
+p wenv->running_class->constant_pool[wenv->running_class->constant_pool[wenv->running_class->constant_pool[$arg0].value.reference.class_index].value.class.class_index].value.utf8_value.contents
+p wenv->running_class->constant_pool[wenv->running_class->constant_pool[wenv->running_class->constant_pool[$arg0].value.reference.name_and_type_index].value.name_and_type.name_index].value.utf8_value.contents
+p wenv->running_class->constant_pool[wenv->running_class->constant_pool[wenv->running_class->constant_pool[$arg0].value.reference.name_and_type_index].value.name_and_type.descriptor_index].value.utf8_value.contents
+end
+
+define followclass
+p wenv->running_class->constant_pool[wenv->running_class->constant_pool[$arg0].value.class.class_index].value.utf8_value.contents
+end
+
+define methodname
+p (((waterMethod *)$arg0)->class)->constant_pool[(((waterMethod *)$arg0)->class)->constant_pool[(((waterMethod *)$arg0)->class)->this_class].value.class.class_index].value.utf8_value.contents
+p *((waterMethod *)$arg0)->name
+p *((waterMethod *)$arg0)->descriptor
+end
+
+define showinst
+p wenv->call_depth
+p invocation_num
+p instructions_executed
+p instruction_hooks[wenv->running_method->code->code[wenv->pc]].name
+p wenv->pc
+p class_name_normal
+p method_name_normal
+p descriptor_normal
+end
+
+define showmethod
+p method->class->name
+p *method->name
+p *method->descriptor
+end
+
+define showmethodinst
+p method->class->name
+p *method->name
+p *method->descriptor
+p *this_instruction
+end

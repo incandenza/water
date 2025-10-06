@@ -1,0 +1,321 @@
+milestones:
+M1	code in CVS
+M2	japhar and mauve test suites and suitable benchmarks in place and easy to run.
+M3	update to newest 1.1 JDK.
+M4	update to newest NSPR.
+M5	80% of 'miscellaneous bugs' fixed.
+M6	supports reading from ZIP files.
+M7	works with classpath.
+M8	garbage collector works.
+M9	can run applets under Mozilla.	
+
+release issues:
+R1	copyright and license updated.
+R2	basic web site set up.
+
+current bugs:
+
+detect getting an exception while trying to throw an exception
+	and do something sensible (e.g., we can't load the
+	java/lang/Exception class)
+pointer warnings in create.c?
+doubles are printing with "E-0"'s at the end for some reason (CastTest.java)
+ThreadTest.java works with debugging version, dies with optimized version
+SimpleDateFormatTest.java is giving back some fucked-up date
+if main exits, the whole thing quits even if there are running threads
+
+
+issues:
+
+what is needed to release this?
+	-- update copyright.
+	-- make sure it passes all test suites.
+	-- run mauve.
+	-- bring up to date with the latest 1.1 JDK.
+	-- upgrade to a recent NSPR.
+	-- make it work with classpath in addition to Sun's classes.
+	-- create a web page.
+	-- get kaffe and japhar and see how I'm doing compared to them.
+	-- (related) get latest caffeinemark if mine is out of date.
+	   run on the various VM's.
+	-- write garbage collector.
+	-- command-line options.
+	-- support reading classes from ZIP files.
+	-- get to plug into Mozilla.
+make sure Object's class initializer is not called multiple times
+	when dealing with array classes.  (what are the states of
+	array classes?)  (when will array's element type be initialized?)
+should return dots instead of slashes as separators in class names
+	(or maybe there is a property that tells you what to use)
+watch for all dereferences of casted pointers to unaligned memory.
+	use GET_*_MACHINE, STORE_*_MACHINE macros instead.
+never make copies of pointer arguments on the stack just to avoid casting
+fill in /* WARNING */'s and /* EXCEPTION ... */'s ((almost?) all done)
+make sure that everything that touches a UTF8 string is really treating
+	it as a UTF8 string and not as a normal C string (basically done)
+	(but why doesn't the JNI FindClass method take a UTF8 string?
+	 lamers.)
+things that are wrong with invoking:
+	checking access flags
+	making sure constructors aren't called more than once (invokespecial)
+
+
+issues already dealt with:
+
+release issues:
+	-- fix any known bugs--make sure the verifier works.
+		-- fixed bug: now doesn't choke on hello world anyway.
+how to represent native calls on the stack for stack tracing?
+	(how to support JIT'ed calls in the future)
+probably should eliminate ARRAY_LENGTH macro.
+synchronization of class loading (initialization is OK, but loading/preparing
+	needs work.)
+
+fixed bugs:
+run HelloWorld with no CLASSPATH set, get infinitely printed crap?
+
+optimizations:
+	memoize references?
+	detect discarded locals, mark as forced garbage?
+
+completed optimizations:
+	put data directly in object instead of following pointer
+	make class lookup faster (hash/etc.)
+
+
+
+crap:
+
+is constructor?	access type  is from super?   ACC_SUPER?	result
+yes		public		yes		yes		B
+yes		protected	yes		yes		B
+yes		private		yes		yes		B
+yes		public		no		yes		B
+yes		protected	no		yes		B
+yes		private		no		yes		B
+no		public		yes		yes           	A
+no		protected	yes		yes		A
+no		private		yes		yes		C
+no		public		no		yes		D (error?)
+no		protected	no		yes		D (error?)
+no		private		no		yes		C
+yes		public		yes		no		B
+yes		protected	yes		no		B
+yes		private		yes		no		B
+yes		public		no		no		B
+yes		protected	no		no		B
+yes		private		no		no		B
+no		public		yes		no		D (error?)
+no		protected	yes		no		D (error?)
+no		private		yes		no		C
+no		public		no		no		D (error?)
+no		protected	no		no		D (error?)
+no		private		no		no		C
+
+if we have a public or protected non-constructor method from a superclass,
+it is called, with normal protected access rules.
+
+if we have a constructor, it is called, with normal protected and private
+access rules.
+
+if we have a private method, it is called, only if from the same class.
+
+if we have a public or protected method not from a superclass, is it 
+an error to call invokespecial on it?  maybe.  and what if ACC_SUPER
+is not set?  I think that means invokespecial cannot be used with the
+"super." syntax, so it's illegal to call with a public or protected
+non-constructor method from a superclass.
+
+basically invokespecial is just invokevirtual with different access 
+checking.
+
+NO!  invokespecial doesn't invoke virtually.  it invokes based on the
+class only.
+
+
+checking for resolution on
+getstatic/putstatic/getfield/putfield/invokevirtual/invokestatic.
+probably better to resolve all this crap earlier, when the classes are
+loaded, right?  by the time we're through the bytecode verifier we
+won't even have to check whether these could be resolved.  (can
+calling an undefined method/referencing an undefined field pass the
+bytecode verifier?  probably, but we won't let it.  (we can make it
+fail as soon or as late as we want.))
+
+actually that might not be true.  calling an undefined method from a
+section of code that is never reached might not be an error.
+similarly, we don't want to make a class die because it references a
+class that we don't have from code that never gets called.
+
+
+0x400fa3d0 in Java_java_lang_System_arraycopy (env=0x8061000, o1=0x80b5280, 
+    i1=134968096, o2=0xb000000, i2=134968064, length=0) at native.c:17
+
+
+args should be (env) (this) 0x81700a0 0x8173360 0x0 0xc
+         0x8067000 0x81700a0
+
+
+implemented socket options:
+	NODELAY		1	Boolean parameter
+				passed in as jboolean as well as jobject
+	SO_LINGER	128	Boolean or Integer parameter
+		we get the on/off in the jboolean and the integer parameter
+		in the object.
+	SO_TIMEOUT	4102	Integer parameter
+		never actually passed to the native routine.
+
+getting socket options:
+	NODELAY		1	if result is -1, it's false, else it's true.
+	SO_LINGER	128	if result is -1, it's off, otherwise
+				the result is the SO_LINGER timeout.
+
+setting datagrams
+	SO_REUSEADDR	4	Integer
+	MULTICASTthing	16	InetAddress
+
+
+sun patents:
+
+_quick instructions:
+5367685 Method and apparatus for resolving references in generated code
+	Inventors:	Gosling, James A.
+	Assignees:	FirstPerson, Inc.
+	
+verifier:
+5748964 Bytecode program interpreter apparatus and method with 
+	pre-verification of data type restrictions
+	Inventors:	Gosling, James A.
+	Assignees:	Sun Microsystems, Inc.
+
+5740441 Bytecode program interpreter apparatus and method with
+	pre-verification of data type restrictions and object initialization
+	Inventors:	Yellin, Frank; Gosling, James A.
+	Assignees:	Sun Microsystems, Inc.
+
+5668999 System and method for pre-verification of stack usage in
+	bytecode program loops
+	Inventors:	Gosling, James A.
+	Assignees:	Sun Microsystems, Inc.
+
+5692047 System and method for executing verifiable programs with facility
+	for using non-verifiable programs from trusted sources
+	Inventors:	McManis, Charles E.
+	Assignees:	Sun Microsystems, Inc.
+
+The Design and Implementation of the Self Compiler, an Optimizing
+Compiler for Object-Oriented Programming Languages
+Craig Chambers, Ph.D. thesis, Stanford University
+Technical report CS-92-1420
+
+Adaptive Optimization for Self: Reconciling High Performance with
+Exploratory Programming.
+Urs Hoelzle, Ph.D. thesis, Stanford University
+Technical report CS-92-1520
+
+
+class loading:
+
+findClass, in general, needs to return a prepared and verified class.
+
+when running the verifier, we may load other classes.
+if we try to verify these, they may try to find the original class,
+so in this case, findClass will have to return the class even though
+it hasn't been verified yet.
+this will work OK if we ignore recursive calls for verification
+(as done with initialization).
+
+multiple threads may try to load the same class at almost the same
+time.  so, when we get into findClass we need to do the following:
+	lock the list of classes
+	look for the class
+	if it's there, remove lock
+	if not, add it and remove lock
+
+	once we have the new or existing class:
+		call load
+		call prepare
+		call verify
+		these will do nothing if these steps have already occurred.
+
+to do a load/prepare/verify/initialize-type step
+
+keep a 'working_thread' variable in each class.
+
+	lock the class
+	while there is a working_thread that's not the current thread, wait
+	if there is still a working_thread, it has to be our own.
+		ignore this recursive call.
+		(we should not be getting recursive calls for
+		loading or preparataion, only verification or initialization.)
+	if the state of the class is past or equal to the state
+		that would be the result of calling this function,
+		ignore call.
+	otherwise, the state must be the state just before the
+		state we bring the class up to.  
+		(you cannot verify right after loading without preparing, etc.)
+	everything is good, so mark ourselves as the working_thread
+		and exit the monitor.
+
+are deadlocks possible here?
+	say thread A is initializing class A,
+
+	the initializer of class A refers to class B and 
+	that of class B to class A.
+
+	thread A eventually makes a call for initialization of class B.
+	as long as thread B is initializing, thread A will keep waiting.
+	thread B eventually makes a call for initialization of class A.
+	as long as thread A is initializing, thread B will keep waiting.
+hmm.
+
+why is holding the monitor for the duration of initialization bad?
+I don't think it is.
+
+steps in loading a class
+
+step	name				pre-state	post-state
+1	get a slot			<none>		CLASS_FETUS
+2	get the class's bytes		CLASS_FETUS	CLASS_FETUS
+	("retrieve" the class)
+3	load the class			CLASS_FETUS	CLASS_LOADED
+4	prepare the class		CLASS_LOADED	CLASS_PREPARED
+5	verify the class		CLASS_PREPARED	CLASS_VERIFIED
+(6	initialize the class		CLASS_VERIFIED	CLASS_INITIALIZED
+	(happens much later, not during loading))
+
+other possible states:
+	CLASS_xxx_FAILED
+
+the number of steps we execute depends on how we're called.
+
+calls from the verifier will want to do step 1 only. (initially)
+calls from the ClassLoader methods may want to only go through step 3
+	(if the "link" option is not specified)
+	(until resolveClass is called, when 4 and 5 will be done)
+normal calls will do steps 1-5.
+
+so, aside from error conditions, we can have classes in four states:
+	CLASS_FETUS	classes loaded by the verifier only.
+			the only things you can do with these is
+			call castIsOK and whatever castIsOK calls.
+	CLASS_LOADED	classes loaded by ClassLoader's that requested
+			that they not be linked.  it is not valid
+			to call methods on these classes until they
+			are linked (by a request from the ClassLoader).
+	CLASS_VERIFIED	ready to use, will be initialized when necessary.
+	CLASS_INITIALIZED	ready to use.
+everything that works on a class has to bring it up to the state
+it needs to be in if it's not already there.
+
+what happens when a CLASS_LOADED class is referenced?  I guess we'll
+link it automatically ourselves, even though it seems like it's OK to
+make it an error.
+
+
+timeline:
+
+980420  		started
+980428  		HelloWorld runs
+980510 or so		javac runs
+980527 or so		verifier basically works, except for 'jsr' handling

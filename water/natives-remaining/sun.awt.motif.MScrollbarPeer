@@ -1,0 +1,4 @@
+    native void create(sun.awt.motif.MComponentPeer);
+    native void pSetValues(int, int, int, int);
+    public native void setLineIncrement(int);
+    public native void setPageIncrement(int);

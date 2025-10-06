@@ -1,0 +1,9 @@
+    native void create(sun.awt.motif.MComponentPeer, java.lang.Object);
+    native void pSetTitle(java.lang.String);
+    native void pShow();
+    native void pHide();
+    native void pReshape(int, int, int, int);
+    native void pDispose();
+    public native void setResizable(boolean);
+    native void addTextComponent();
+    public native void toBack();

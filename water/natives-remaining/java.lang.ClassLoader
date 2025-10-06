@@ -1,0 +1,1 @@
+    private static native java.lang.String getSystemResourceAsName0(java.lang.String);

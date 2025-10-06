@@ -1,0 +1,10 @@
+    public native java.lang.Class getInterfaces()[];
+    public native int getModifiers();
+    public native java.lang.Object getSigners()[];
+    native void setSigners(java.lang.Object[]);
+    private native java.lang.reflect.Field getFields0(int)[];
+    private native java.lang.reflect.Method getMethods0(int)[];
+    private native java.lang.reflect.Constructor getConstructors0(int)[];
+    private native java.lang.reflect.Field getField0(java.lang.String, int);
+    private native java.lang.reflect.Method getMethod0(java.lang.String, java.lang.Class[], int);
+    private native java.lang.reflect.Constructor getConstructor0(java.lang.Class[], int);

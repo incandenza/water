@@ -1,0 +1,2 @@
+    private native void outputClassFields(java.lang.Object, java.lang.Class, int[]);
+    private native boolean invokeObjectWriter(java.lang.Object, java.lang.Class);

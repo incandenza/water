@@ -1,0 +1,10 @@
+#!/bin/sh
+
+unset BUILD_OPT
+unset BUILD_PROF
+make realclean
+export BUILD_OPT=1
+make realclean
+export BUILD_PROF=1
+make realclean
+find . \( -name '*~' -o -name core \) -exec rm -f {} \;

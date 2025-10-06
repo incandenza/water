@@ -1,0 +1,280 @@
+-----------VM specific-----------
+
+done
+----
+
+java.lang.Class:
+    public static native java.lang.Class forName(java.lang.String);
+    public native java.lang.Object newInstance();
+    public native java.lang.String getName();
+    public native boolean isInstance(java.lang.Object);
+    public native boolean isAssignableFrom(java.lang.Class);
+    public native boolean isInterface();
+    public native boolean isArray();
+    public native boolean isPrimitive();
+    public native java.lang.ClassLoader getClassLoader();
+    public native java.lang.Class getSuperclass();
+    public native int getModifiers();
+    static native java.lang.Class getPrimitiveClass(java.lang.String);
+    public native java.lang.Class getComponentType();
+
+java.lang.Object:
+    public final native java.lang.Class getClass();
+    public native int hashCode();
+    protected native java.lang.Object clone();
+    public final native void notify();
+    public final native void notifyAll();
+    public final native void wait(long);
+
+java.lang.Runtime:
+    private native void exitInternal(int);
+    public native void traceInstructions(boolean);
+    public native void traceMethodCalls(boolean);
+    private native synchronized java.lang.String initializeLinkerInternal();
+    private native int loadFileInternal(java.lang.String);
+    private native java.lang.String buildLibName(java.lang.String, java.lang.String);
+
+java.lang.System:
+    private static native java.util.Properties initProperties(java.util.Properties);
+    public static native void arraycopy(java.lang.Object, int, java.lang.Object, int, int);
+    public static native int identityHashCode(java.lang.Object);
+
+java.lang.Throwable:
+    private native void printStackTrace0(java.lang.Object);
+    public native java.lang.Throwable fillInStackTrace();
+
+java.lang.Thread:
+    public static native java.lang.Thread currentThread();
+    public static native void yield();
+    public static native void sleep(long);
+    public native synchronized void start();
+    public final native boolean isAlive();
+    public native int countStackFrames();
+
+java.util.ResourceBundle:
+    private static native java.lang.Class getClassContext()[];
+
+java.lang.ClassLoader:
+    private native void init();
+    private static native java.io.InputStream getSystemResourceAsStream0(java.lang.String);
+    private native java.lang.Class defineClass0(java.lang.String, byte[], int, int);
+    private native void resolveClass0(java.lang.Class);
+    private native java.lang.Class findSystemClass0(java.lang.String);
+
+not done
+--------
+
+java.lang.Thread:
+    private native boolean isInterrupted(boolean);
+    private native void setPriority0(int);
+    private native void stop0(java.lang.Object);
+    private native void suspend0();
+    private native void resume0();
+    private native void interrupt0();
+
+java.lang.Class:
+    public native java.lang.Class getInterfaces()[];
+    public native java.lang.Object getSigners()[];
+    native void setSigners(java.lang.Object[]);
+    private native java.lang.reflect.Field getFields0(int)[];
+    private native java.lang.reflect.Method getMethods0(int)[];
+    private native java.lang.reflect.Constructor getConstructors0(int)[];
+    private native java.lang.reflect.Field getField0(java.lang.String, int);
+    private native java.lang.reflect.Method getMethod0(java.lang.String, java.lang.Class[], int);
+    private native java.lang.reflect.Constructor getConstructor0(java.lang.Class[], int);
+
+java.lang.Runtime:
+    private static native void runFinalizersOnExit0(boolean);
+    private native java.lang.Process execInternal(java.lang.String[], java.lang.String[]);
+    public native long freeMemory();
+    public native long totalMemory();
+    public native void gc();
+    public native void runFinalization();
+
+java.io.ObjectInputStream:
+    private native java.lang.Class loadClass0(java.lang.Class, java.lang.String);
+    private native void inputClassFields(java.lang.Object, java.lang.Class, int[]);
+    private static native java.lang.Object allocateNewObject(java.lang.Class, java.lang.Class);
+    private static native java.lang.Object allocateNewArray(java.lang.Class, int);
+    private native boolean invokeObjectReader(java.lang.Object, java.lang.Class);
+
+java.io.ObjectOutputStream:
+    private native void outputClassFields(java.lang.Object, java.lang.Class, int[]);
+    private native boolean invokeObjectWriter(java.lang.Object, java.lang.Class);
+
+java.lang.ClassLoader:
+    private static native java.lang.String getSystemResourceAsName0(java.lang.String);
+
+java.lang.SecurityManager:
+    protected native java.lang.Class getClassContext()[];
+    protected native java.lang.ClassLoader currentClassLoader();
+    protected native int classDepth(java.lang.String);
+    protected native int classLoaderDepth();
+    private native java.lang.Class currentLoadedClass0();
+
+java.lang.String:
+    public native java.lang.String intern();
+
+
+-----------not VM specific-----------
+
+done
+----
+
+java.lang.System:
+    public static native long currentTimeMillis();
+
+java.io.FileDescriptor:
+    public native boolean valid();
+    public native void sync();
+    private static native java.io.FileDescriptor initSystemFD(java.io.FileDescriptor, int);
+
+java.lang.Double:
+    public static native long doubleToLongBits(double);
+    public static native double longBitsToDouble(long);
+
+java.lang.Float:
+    public static native int floatToIntBits(float);
+    public static native float intBitsToFloat(int);
+
+java.lang.Math:
+    public static native double sin(double);
+    public static native double cos(double);
+    public static native double tan(double);
+    public static native double asin(double);
+    public static native double acos(double);
+    public static native double atan(double);
+    public static native double exp(double);
+    public static native double log(double);
+    public static native double sqrt(double);
+    public static native double ceil(double);
+    public static native double floor(double);
+    public static native double rint(double);
+    public static native double atan2(double, double);
+    public static native double pow(double, double);
+
+java.io.FileInputStream:
+    private native void open(java.lang.String);
+    public native int read();
+    private native int readBytes(byte[], int, int);
+    public native long skip(long);
+    public native int available();
+    public native void close();
+
+java.io.FileOutputStream:
+    private native void open(java.lang.String);
+    private native void openAppend(java.lang.String);
+    public native void write(int);
+    private native void writeBytes(byte[], int, int);
+    public native void close();
+
+java.io.File:
+    private native boolean exists0();
+    private native boolean isFile0();
+    private native boolean isDirectory0();
+    private native long lastModified0();
+    private native java.lang.String list0()[];
+    public native boolean isAbsolute();
+    private native boolean delete0();
+    private native boolean rmdir0();
+    private native boolean mkdir0();
+    private native boolean renameTo0(java.io.File);
+    private native long length0();
+
+java.io.RandomAccessFile:
+    private native void open(java.lang.String, boolean);
+    public native int read();
+    private native int readBytes(byte[], int, int);
+    public native void write(int);
+    private native void writeBytes(byte[], int, int);
+    public native long getFilePointer();
+    public native void seek(long);
+    public native void close();
+    public native long length();
+
+java.net.InetAddressImpl:
+    native int getInetFamily();
+    native java.lang.String getLocalHostName();
+    native void makeAnyLocalAddress(java.net.InetAddress);
+    native byte lookupAllHostAddr(java.lang.String)[][];
+    native java.lang.String getHostByAddr(int);
+
+java.net.PlainSocketImpl:
+    private native void socketCreate(boolean);
+    private native void socketConnect(java.net.InetAddress, int);
+    private native void socketBind(java.net.InetAddress, int);
+    private native void socketListen(int);
+    private native void socketAccept(java.net.SocketImpl);
+    private native int socketAvailable();
+    private native void socketClose();
+    private static native void initProto();
+    private native void socketSetOption(int, boolean, java.lang.Object);
+    private native int socketGetOption(int);
+
+java.net.SocketInputStream:
+    private native int socketRead(byte[], int, int);
+
+java.net.SocketOutputStream:
+    private native void socketWrite(byte[], int, int);
+
+java.net.DatagramPlainSocketImpl:
+    protected native synchronized void bind(int, java.net.InetAddress);
+    private native void datagramSocketCreate();
+    private native void datagramSocketClose();
+    protected native void send(java.net.DatagramPacket);
+    protected native synchronized void receive(java.net.DatagramPacket);
+    protected native void setTTL(byte);
+    protected native byte getTTL();
+    private native void socketSetOption(int, java.lang.Object);
+    private native int socketGetOption(int);
+
+
+not done
+--------
+
+java.io.File:
+    private native boolean canWrite0();
+    private native boolean canRead0();
+    private native java.lang.String canonPath(java.lang.String);
+
+java.lang.Double:
+    static native double valueOf0(java.lang.String);
+
+java.lang.Math:
+    public static native double IEEEremainder(double, double);
+
+java.lang.UNIXProcess:
+    public native void run();
+    private native int forkAndExec(java.lang.String[], java.lang.String[]);
+    private native void notifyReaders();
+    public native void destroy();
+
+java.net.PlainDatagramSocketImpl:
+    protected native synchronized int peek(java.net.InetAddress);
+    protected native void join(java.net.InetAddress);
+    protected native void leave(java.net.InetAddress);
+
+java.util.zip.CRC32:
+    public native void update(byte[], int, int);
+    private native void update1(int);
+
+java.util.zip.Deflater:
+    public native synchronized void setDictionary(byte[], int, int);
+    public native synchronized int deflate(byte[], int, int);
+    public native synchronized int getAdler();
+    public native synchronized int getTotalIn();
+    public native synchronized int getTotalOut();
+    public native synchronized void reset();
+    public native synchronized void end();
+    private native void init(boolean);
+
+java.util.zip.Inflater:
+    public native synchronized void setDictionary(byte[], int, int);
+    public native synchronized int inflate(byte[], int, int);
+    public native synchronized int getAdler();
+    public native synchronized int getTotalIn();
+    public native synchronized int getTotalOut();
+    public native synchronized void reset();
+    public native synchronized void end();
+    private native void init(boolean);
+

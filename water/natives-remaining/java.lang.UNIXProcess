@@ -1,0 +1,4 @@
+    public native void run();
+    private native int forkAndExec(java.lang.String[], java.lang.String[]);
+    private native void notifyReaders();
+    public native void destroy();

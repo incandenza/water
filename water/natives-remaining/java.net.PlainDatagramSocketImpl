@@ -1,0 +1,3 @@
+    protected native synchronized int peek(java.net.InetAddress);
+    protected native void join(java.net.InetAddress);
+    protected native void leave(java.net.InetAddress);

@@ -1,0 +1,125 @@
+#!/usr/bin/perl
+
+#
+# water
+# a Java virtual machine
+# 
+# Copyright (C) 1998-2010 Dan McGuirk <mcguirk@gmail.com>
+# ; Permission is hereby granted, free of charge, to any person
+# obtaining a copy of this software and associated documentation
+# files (the "Software"), to deal in the Software without
+# restriction, including without limitation the rights to use,
+# copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following
+# conditions:
+# 
+# The above copyright notice and this permission notice shall be
+# included in all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+# OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+# HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+# WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+# OTHER DEALINGS IN THE SOFTWARE.
+# 
+
+open(PRE, "exec-instr-pre.c") || 
+	die "can't open exec-instr-pre.c: $!";
+open(PROTOS, ">exec-instr-protos.c") || 
+	die "can't write exec-instr-protos.c: $!";
+open(TABLE, ">exec-instr-table.c") || 
+	die "can't write exec-instr-table.c: $!";
+open(TABLESTUBS, ">exec-instr-table-stubs.c") || 
+	die "can't write exec-instr-table-stubs.c: $!";
+open(SWITCH, ">exec-instr-switch.c") ||
+	die "can't write exec-instr-switch.c: $!";
+open(MACROS, ">exec-instr-macros.c") ||
+	die "can't write exec-instr-macros.c: $!";
+$warning = "/* XXX AUTOMATICALLY GENERATED FILE -- DO NOT EDIT */\n";
+print PRE         $warning;
+print PROTOS      $warning;
+print TABLE       $warning;
+print TABLESTUBS  $warning;
+print SWITCH      $warning;
+print MACROS      $warning;
+
+$GOT_NOTHING = 0;
+$GOT_COMMENT = 1;
+$GOT_HEADER  = 2;
+
+$state = $GOT_NOTHING;
+$braces_open = 0;
+while(<PRE>) {
+    chop;
+    if($state == $GOT_NOTHING) {
+	if(($instr_name, $instr_number) = 
+	   ($_ =~ m|^/\* (\w+) \-\- \#(\d+) \*/|)) {
+
+	    print PROTOS <<END;
+/* $instr_number */ static int instr_$instr_name(water_JNIEnv *wenv);
+END
+
+            # we can't leave holes in the instruction tables.
+            for($i = $last_instr_number + 1; $i < $instr_number; $i++) {
+		print TABLE <<END;
+    { /* $i */ "--unknown--", 0 },
+END
+
+                print TABLESTUBS <<END;
+    { /* $i */ "--unknown--", 0 },
+END
+	    }
+
+	    print TABLE <<END;
+    { /* $instr_number */ "$instr_name", instr_$instr_name },
+END
+
+	    print TABLESTUBS <<END;
+    { /* $instr_number */ "$instr_name", 0 },
+END
+
+	    print SWITCH <<END;
+	   case($instr_number): instr_$instr_name; break;
+END
+
+            $last_instr_name = $instr_name;
+            $last_instr_number = $instr_number;
+	    $state = $GOT_COMMENT;
+	} else {
+	    # outside of functions, just copy everything.
+	    print MACROS "$_\n";
+	}
+    } elsif($state == $GOT_COMMENT) {
+	if(/^static int/) {
+	    print MACROS <<END;
+#define instr_$instr_name \\
+END
+
+	    $state = $GOT_HEADER;
+	}
+    } else {
+	# my perl skills fail me
+	for($i = 0; $i < length($_); $i++) {
+	    $ch = substr($_, $i, 1);
+	    if($ch eq '{') {
+		$braces_open++;
+	    } elsif($ch eq '}') {
+		$braces_open--;
+	    }
+	}
+
+	if($braces_open > 0) {
+	    print MACROS "$_ \\\n";
+	} else {
+	    print MACROS "$_\n\n";
+	    $state = $GOT_NOTHING;
+	}
+    }
+}
+
+close(PRE);
+

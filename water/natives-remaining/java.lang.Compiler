@@ -1,0 +1,6 @@
+    private static native void initialize();
+    public static native boolean compileClass(java.lang.Class);
+    public static native boolean compileClasses(java.lang.String);
+    public static native java.lang.Object command(java.lang.Object);
+    public static native void enable();
+    public static native void disable();

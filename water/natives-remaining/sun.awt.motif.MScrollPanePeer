@@ -1,0 +1,7 @@
+    native void create(sun.awt.motif.MComponentPeer);
+    native void pSetScrollChild(sun.awt.motif.MComponentPeer);
+    native void pSetIncrement(int, int, int);
+    native int pGetScrollbarSpace(int);
+    native int pGetBlockIncrement(int);
+    native java.awt.Insets pInsets(int, int, int, int);
+    public native void setScrollPosition(int, int);

@@ -1,0 +1,1 @@
+    public native java.lang.String intern();

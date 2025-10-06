@@ -1,0 +1,17 @@
+    native void pInitialize();
+    native void pShow();
+    native void pHide();
+    native void pEnable();
+    native void pDisable();
+    native void pReshape(int, int, int, int);
+    native void pAddRepaint(int, int, int, int);
+    native void pTriggerRepaint();
+    native void pDispose();
+    native void pMakeCursorVisible();
+    native java.awt.Point pGetLocationOnScreen();
+    public native void setForeground(java.awt.Color);
+    public native void setBackground(java.awt.Color);
+    public native void setFont(java.awt.Font);
+    public native void setCursor(java.awt.Cursor);
+    public native void handleEvent(java.awt.AWTEvent);
+    public native void requestFocus();

@@ -1,0 +1,1 @@
+    private native boolean parseImage(int, int, int, int, boolean, int, byte[], byte[], java.awt.image.IndexColorModel);

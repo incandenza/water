@@ -1,0 +1,2 @@
+    native void create(sun.awt.motif.MComponentPeer);
+    public native void setLabel(java.lang.String);

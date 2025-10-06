@@ -1,0 +1,3 @@
+    native void createMenu(sun.awt.motif.MComponentPeer);
+    native void pShow(java.awt.Event, int, int, sun.awt.motif.MComponentPeer);
+    native void pDispose();

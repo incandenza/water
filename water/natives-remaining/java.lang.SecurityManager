@@ -1,0 +1,5 @@
+    protected native java.lang.Class getClassContext()[];
+    protected native java.lang.ClassLoader currentClassLoader();
+    protected native int classDepth(java.lang.String);
+    protected native int classLoaderDepth();
+    private native java.lang.Class currentLoadedClass0();

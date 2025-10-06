@@ -1,0 +1,4 @@
+    native void create(sun.awt.motif.MComponentPeer);
+    public native void setLabel(java.lang.String);
+    public native void setState(boolean);
+    public native void setCheckboxGroup(java.awt.CheckboxGroup);

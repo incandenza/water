@@ -1,0 +1,16 @@
+    native void create(sun.awt.motif.MComponentPeer);
+    native void pDispose();
+    native int getExtraWidth();
+    native int getExtraHeight();
+    public native void setTextBackground(java.awt.Color);
+    public native void pSetEditable(boolean);
+    public native void select(int, int);
+    public native int getSelectionStart();
+    public native int getSelectionEnd();
+    public native void setText(java.lang.String);
+    public native java.lang.String getText();
+    public native void insert(java.lang.String, int);
+    public native void replaceRange(java.lang.String, int, int);
+    public native void setFont(java.awt.Font);
+    public native void setCaretPosition(int);
+    public native int getCaretPosition();

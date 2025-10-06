@@ -1,0 +1,8 @@
+    public native synchronized void setDictionary(byte[], int, int);
+    public native synchronized int deflate(byte[], int, int);
+    public native synchronized int getAdler();
+    public native synchronized int getTotalIn();
+    public native synchronized int getTotalOut();
+    public native synchronized void reset();
+    public native synchronized void end();
+    private native void init(boolean);

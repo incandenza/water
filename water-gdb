@@ -1,0 +1,11 @@
+#!/bin/sh
+
+WATER_DIR=/home/djm/water
+BUILD_NAME=Linux2_x86
+
+cat >$WATER_DIR/gdb-setup <<EOF
+set env LD_LIBRARY_PATH $WATER_DIR/dist/${BUILD_NAME}_DBG.OBJ/bin
+set args $*
+EOF
+
+gdb -x $WATER_DIR/gdb-setup -x $WATER_DIR/gdb-macros $WATER_DIR/dist/${BUILD_NAME}_DBG.OBJ/bin/water

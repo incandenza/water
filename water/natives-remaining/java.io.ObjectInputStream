@@ -1,0 +1,5 @@
+    private native java.lang.Class loadClass0(java.lang.Class, java.lang.String);
+    private native void inputClassFields(java.lang.Object, java.lang.Class, int[]);
+    private static native java.lang.Object allocateNewObject(java.lang.Class, java.lang.Class);
+    private static native java.lang.Object allocateNewArray(java.lang.Class, int);
+    private native boolean invokeObjectReader(java.lang.Object, java.lang.Class);
