@@ -1,3 +1,12 @@
+# JVM Implementation in C
+
+**Historical Note:** This is a Java Virtual Machine implementation I wrote in C in around 1998. The code is preserved here as a portfolio piece. Build instructions below are original and may not work on modern systems without modification.
+
+Approximately 18,000 lines of C code implementing core JVM functionality.
+
+
+Original README:
+
 To use this code,
 
 1) Build it by typing 'make'.  Set 'export BUILD_OPT=1' first
