@@ -34,9 +34,9 @@ endif
 
 # Name of the binary code directories
 ifdef MOZILLA_CLIENT
-OBJDIR_NAME	= Linux2_x86_DBG.OBJ
+OBJDIR_NAME	= Darwin25.1.0_x86_64_DBG.OBJ
 else
-OBJDIR_NAME	= Linux2_x86_DBG.OBJ
+OBJDIR_NAME	= Darwin25.1.0_x86_64_DBG.OBJ
 endif
 
 MKDEPEND_DIR    = $(DEPTH)/config/mkdepend

@@ -26,7 +26,7 @@
 #elif defined(WIN32) || defined(XP_OS2_VACPP)
 #include <sys/timeb.h>
 #else
-#error "Architecture not supported"
+#include <sys/time.h>
 #endif
 
 
@@ -104,7 +104,7 @@ int main(int argc, char **argv)
   fprintf(stdout, "%s", buf);
 
 #else
-#error "Architecture not supported"
+#include <sys/time.h>
 #endif
 
     return 0;
