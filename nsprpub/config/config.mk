@@ -56,6 +56,10 @@ NOMD_CCFLAGS	= $(CCC_ONLY_FLAGS) $(OPTIMIZER) $(NOMD_OS_CFLAGS)\
 
 NSINSTALL	= $(MOD_DEPTH)/config/$(OBJDIR_NAME)/nsinstall
 
+# Force INSTALL to be set properly for Darwin
+ifeq ($(OS_ARCH),Darwin)
+INSTALL		= $(NSINSTALL) -t
+else
 ifeq ($(NSDISTMODE),copy)
 # copy files, but preserve source mtime
 INSTALL		= $(NSINSTALL) -t
@@ -66,6 +70,7 @@ INSTALL		= $(NSINSTALL) -L `$(NFSPWD)`
 else
 # install using relative symbolic links
 INSTALL		= $(NSINSTALL) -R
+endif
 endif
 endif
 

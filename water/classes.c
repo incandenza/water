@@ -28,6 +28,8 @@
 
 #include "classes.h"
 #include "byteops.h"
+#include "../dist/Darwin25.1.0.OBJ/include/prthread.h"
+#include "../dist/Darwin25.1.0.OBJ/include/prmon.h"
 #include "utf8.h"
 #include "call.h"
 #include "objects.h"
@@ -2135,7 +2137,7 @@ waterClass *water_getCorrespondingArrayClass(JNIEnv *env, waterClass *class)
 	new_array_class->clazz_type = JNI_OBJECT_ARRAY;
     } else {
 	/* array of a primitive type. */
-	new_array_class->clazz_type = class->clazz_type | JNI_IS_ARRAY;
+	new_array_class->class_type = class->class_type | JNI_IS_ARRAY;
     }
 
     new_array_class->resolved_superclass = 

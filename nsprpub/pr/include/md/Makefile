@@ -111,6 +111,10 @@ ifeq ($(OS_ARCH),SINIX)
 MDCPUCFG_H = _reliantunix.cfg
 endif
 
+ifeq ($(OS_ARCH),Darwin)
+MDCPUCFG_H = _rhapsody.h
+endif
+
 ifeq ($(OS_ARCH),Rhapsody)
 MDCPUCFG_H = _rhapsody.cfg
 endif

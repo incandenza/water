@@ -52,7 +52,7 @@
 #define WENV_OPSTACK_TOP (wenv->opstack_top)
 #define WENV_FRAME_TOP (wenv->frame_top)
 #define WENV_RUNNING_CODE (wenv->running_method->code->code)
-#define WENV_RUNNING_CLASS (wenv->running_method->class)
+#define WENV_RUNNING_CLASS (wenv->running_method->clazz)
 #endif
 
 /* the one-line comments are used as tags -- they must be present and   */

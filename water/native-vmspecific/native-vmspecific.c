@@ -428,9 +428,9 @@ jobject Java_java_lang_Throwable_fillInStackTrace(JNIEnv *env,
 	(*env)->CallObjectMethod(env, trace_buffer, 
 				 stringbuffer_append_string, string);
 	string = 
-	    water_newString(env, &method->class->constant_pool[
-				  method->class->constant_pool[
-                                  method->class->this_class].
+	    water_newString(env, &method->clazz->constant_pool[
+				  method->clazz->constant_pool[
+                                  method->clazz->this_class].
                                   value.class.class_index].value.utf8_value);
 	(*env)->CallObjectMethod(env, trace_buffer, 
 				 stringbuffer_append_string, string);

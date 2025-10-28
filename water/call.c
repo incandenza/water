@@ -478,7 +478,7 @@ static void callJavaMethod(water_JNIEnv *wenv, waterObject *object,
 		"class/object/method: %p/%p/%p\n",
 		wenv->call_depth, 
 		class_name_normal, method_name_normal, descriptor_normal,
-		method->class, object, method);
+		method->clazz, object, method);
     }
 #endif
 
@@ -488,7 +488,7 @@ static void callJavaMethod(water_JNIEnv *wenv, waterObject *object,
 	if(object) {
 	    monitor = object->monitor;
 	} else {
-	    monitor = method->class->monitor;
+	    monitor = method->clazz->monitor;
 	}
 
 	PR_EnterMonitor(monitor);
@@ -587,7 +587,7 @@ static void callJavaMethod(water_JNIEnv *wenv, waterObject *object,
 	       !exception_info->resolved_catch_type) {
 		exception_info->resolved_catch_type = 
 		    water_resolveClassByIndex((JNIEnv *)wenv,
-					      method->class,
+					      method->clazz,
 					      exception_info->catch_type,
 					      CLASS_VERIFIED);
 		if(!exception_info->resolved_catch_type) {
@@ -712,7 +712,7 @@ static void callJavaMethod(water_JNIEnv *wenv, waterObject *object,
 		"class/object/method: %p/%p/%p\n",
 		wenv->call_depth, 
 		class_name_normal, method_name_normal, descriptor_normal,
-		method->class, object, method);
+		method->clazz, object, method);
     }
 #endif
 
@@ -786,7 +786,7 @@ static void callNativeMethod(water_JNIEnv *wenv, waterObject *object,
 	/* start after the this pointer for non-statics, and then just  */
 	/* give it the this pointer ourselves.                          */
 
-	water_asmCallNative((JNIEnv *)wenv, method->class, 
+	water_asmCallNative((JNIEnv *)wenv, method->clazz, 
 			    method->native_code,
 			    wenv->opstack_top - method->args_size - 16, 
 			    method->args_size,

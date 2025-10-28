@@ -288,7 +288,7 @@ static int verify_method(JNIEnv *env, waterClass *class, waterMethod *method)
     /* what we're trying to implement here.                               */
 
     /* only verify methods that we define, not inherited ones. */
-    if(method->class != class) {
+    if(method->clazz != class) {
 	return 0;
     }
 
@@ -662,7 +662,7 @@ static int trace_execution_flow(JNIEnv *env, waterMethod *method,
     } else {
 	/* for non-static methods include a 'this' pointer. */
 	instruction_table[0].locals_contents[0].type = 0;
-	instruction_table[0].locals_contents[0].class = method->class;
+	instruction_table[0].locals_contents[0].class = method->clazz;
 	if(parse_method_descriptor(env, method, method->descriptor, 
 				   &instruction_table[0].locals_contents[1], 
 				   &ignore, method->code->max_locals - 1, 
@@ -1324,7 +1324,7 @@ static int compute_instruction_effects(JNIEnv *env,
     case(19): /* ldc_w */
     case(20): /* ldc2_w */
 	pool_index = get_pool_index(instruction_code);
-	tag = method->class->constant_pool[pool_index].tag;
+	tag = method->clazz->constant_pool[pool_index].tag;
 	if(instruction_code[0] == 20) {
 	    /* for ldc2_w, the constant can only be a long or double. */
 	    if(tag == CONSTANT_LONG_TAG) {
@@ -2055,7 +2055,7 @@ static int compute_instruction_effects(JNIEnv *env,
 	
     case(187): /* new */
 	pool_index = get_pool_index(instruction_code);
-	class = water_resolveClassByIndex(env, method->class, pool_index,
+	class = water_resolveClassByIndex(env, method->clazz, pool_index,
 					  CLASS_FETUS);
 	if(!class) {
 	    /* bad reference */
@@ -2089,7 +2089,7 @@ static int compute_instruction_effects(JNIEnv *env,
 
     case(189): /* anewarray */
 	pool_index = get_pool_index(instruction_code);
-	class = water_resolveClassByIndex(env, method->class, pool_index,
+	class = water_resolveClassByIndex(env, method->clazz, pool_index,
 					  CLASS_FETUS);
 	if(!class) {
 	    /* bad reference */
@@ -2140,7 +2140,7 @@ static int compute_instruction_effects(JNIEnv *env,
 	/* the stack and replace it with a Throwable object, so this    */
 	/* reference will disappear anyway.                             */
 	pool_index = get_pool_index(instruction_code);
-	class = water_resolveClassByIndex(env, method->class, pool_index,
+	class = water_resolveClassByIndex(env, method->clazz, pool_index,
 					  CLASS_FETUS);
 	if(!class) {
 	    /* bad reference */
@@ -2190,7 +2190,7 @@ static int compute_instruction_effects(JNIEnv *env,
 
     case(197): /* multianewarray */
 	pool_index = get_pool_index(instruction_code);
-	class = water_resolveClassByIndex(env, method->class, pool_index,
+	class = water_resolveClassByIndex(env, method->clazz, pool_index,
 					  CLASS_FETUS);
 	if(!class) {
 	    /* bad reference */
@@ -2876,7 +2876,7 @@ static int next_argument_type(JNIEnv *env, waterMethod *method,
 	    
 	    results_array[results_offset].type = 0;
 	    results_array[results_offset].class = 
-		water_findClass(env, method->class->class_loader, 
+		water_findClass(env, method->clazz->class_loader, 
 				name, CLASS_FETUS, 0, 0);
 	    free(name);
 	    if(!results_array[results_offset].class) {
@@ -3149,7 +3149,7 @@ static int merge_stacks_exception(JNIEnv *env,
 	    WATER_ENV(env)->java_lang_throwable_class;
     } else {
 	new_stack_contents[0].class = 
-	    water_resolveClassByIndex(env, method->class,
+	    water_resolveClassByIndex(env, method->clazz,
 				      exception_info->catch_type, CLASS_FETUS);
 	if(!new_stack_contents[0].class) {
 	    return -1;
@@ -3171,19 +3171,19 @@ static int verifier_resolveFieldReference(JNIEnv *env,
     waterConstantNameAndType *nameandtype_ref;
     int offset;
 
-    if(pool_index >= method->class->constant_pool_count) {
+    if(pool_index >= method->clazz->constant_pool_count) {
 	return -1;
     }
     
-    if(method->class->constant_pool[pool_index].tag != CONSTANT_FIELDREF_TAG) {
+    if(method->clazz->constant_pool[pool_index].tag != CONSTANT_FIELDREF_TAG) {
 	return -1;
     }
-    field_ref = &method->class->constant_pool[pool_index].value.reference;
+    field_ref = &method->clazz->constant_pool[pool_index].value.reference;
 
     /* we don't always care about the containing class. */
     if(containing_class) {
 	*containing_class = 
-	    water_resolveClassByIndex(env, method->class, 
+	    water_resolveClassByIndex(env, method->clazz, 
 				      field_ref->class_index, 
 				      CLASS_FETUS);
 	if(!*containing_class) {
@@ -3191,24 +3191,24 @@ static int verifier_resolveFieldReference(JNIEnv *env,
 	}
     }
     
-    if(field_ref->name_and_type_index >= method->class->constant_pool_count) {
+    if(field_ref->name_and_type_index >= method->clazz->constant_pool_count) {
 	return -1;
     }
 
-    if(method->class->constant_pool[field_ref->name_and_type_index].tag != 
+    if(method->clazz->constant_pool[field_ref->name_and_type_index].tag != 
        CONSTANT_NAMEANDTYPE_TAG) {
 	return -1;
     }
     nameandtype_ref = 
-	&method->class->constant_pool[
+	&method->clazz->constant_pool[
         field_ref->name_and_type_index].value.name_and_type;
     
     if(nameandtype_ref->descriptor_index >=
-       method->class->constant_pool_count) {
+       method->clazz->constant_pool_count) {
 	return -1;
     }
 
-    if(method->class->constant_pool[
+    if(method->clazz->constant_pool[
        nameandtype_ref->descriptor_index].tag != 
        CONSTANT_UTF8_TAG) {
 	return -1;
@@ -3217,7 +3217,7 @@ static int verifier_resolveFieldReference(JNIEnv *env,
     offset = 0;
     return 
 	next_argument_type(env, method,
-			   &method->class->constant_pool[
+			   &method->clazz->constant_pool[
                            nameandtype_ref->descriptor_index].
                            value.utf8_value, &offset,
 			   field_slot, 0, 1, ARGUMENT_NO_EXPAND);
@@ -3234,50 +3234,50 @@ static int verifier_resolveMethodReference(JNIEnv *env,
     waterConstantReference *method_ref;
     waterConstantNameAndType *nameandtype_ref;
 
-    if(pool_index >= method->class->constant_pool_count) {
+    if(pool_index >= method->clazz->constant_pool_count) {
 	return -1;
     }
     
-    if(method->class->constant_pool[pool_index].tag != 
+    if(method->clazz->constant_pool[pool_index].tag != 
            CONSTANT_METHODREF_TAG &&
-       method->class->constant_pool[pool_index].tag != 
+       method->clazz->constant_pool[pool_index].tag != 
            CONSTANT_INTERFACE_METHODREF_TAG) {
 	return -1;
     }
-    method_ref = &method->class->constant_pool[pool_index].value.reference;
+    method_ref = &method->clazz->constant_pool[pool_index].value.reference;
     
     *method_class = 
-	water_resolveClassByIndex(env, method->class, method_ref->class_index, 
+	water_resolveClassByIndex(env, method->clazz, method_ref->class_index, 
 				  CLASS_FETUS);
     if(!*method_class) {
 	return -1;
     }
     
-    if(method_ref->name_and_type_index >= method->class->constant_pool_count) {
+    if(method_ref->name_and_type_index >= method->clazz->constant_pool_count) {
 	return -1;
     }
 
-    if(method->class->constant_pool[method_ref->name_and_type_index].tag != 
+    if(method->clazz->constant_pool[method_ref->name_and_type_index].tag != 
        CONSTANT_NAMEANDTYPE_TAG) {
 	return -1;
     }
     nameandtype_ref = 
-	&method->class->constant_pool[method_ref->name_and_type_index].
+	&method->clazz->constant_pool[method_ref->name_and_type_index].
         value.name_and_type;
     
     if(nameandtype_ref->descriptor_index >=
-       method->class->constant_pool_count) {
+       method->clazz->constant_pool_count) {
 	return -1;
     }
 
-    if(method->class->constant_pool[nameandtype_ref->descriptor_index].tag != 
+    if(method->clazz->constant_pool[nameandtype_ref->descriptor_index].tag != 
        CONSTANT_UTF8_TAG) {
 	return -1;
     }
 
     return 
 	parse_method_descriptor(env, method,
-				&method->class->constant_pool[
+				&method->clazz->constant_pool[
 				nameandtype_ref->descriptor_index].
                                 value.utf8_value, 
 				method_arguments,

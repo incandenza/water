@@ -140,7 +140,7 @@ int water_runByteCode(water_JNIEnv *wenv)
     pc = wenv->pc;
     frame_top = wenv->frame_top;
     running_code = wenv->running_method->code->code;
-    running_class = wenv->running_method->class;
+    running_class = wenv->running_method->clazz;
 #endif
 
     while(1 /* until we hit a return instruction */) {
@@ -148,8 +148,8 @@ int water_runByteCode(water_JNIEnv *wenv)
 
 #if defined(DEBUG_djm) && defined(SHOW_INSTRUCTIONS)
 	waterUTF8String *class_name = 
-	    water_getClassName(wenv->running_method->class,
-			       wenv->running_method->class->this_class);
+	    water_getClassName(wenv->running_method->clazz,
+			       wenv->running_method->clazz->this_class);
 	char *class_name_normal = water_UTF8ToNormal(class_name);
 	char *method_name_normal = 
 	    water_UTF8ToNormal(wenv->running_method->name);
