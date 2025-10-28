@@ -2,7 +2,7 @@
  * water
  * a Java virtual machine
  * 
- * Copyright (C) 1998-2010 Dan McGuirk <mcguirk@gmail.com>
+ * Copyright (C) 1998-2025 Dan McGuirk <mcguirk@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,12 +27,13 @@
  */
 
 #include "classes.h"
-#include "nspr.h"
 #include "byteops.h"
 #include "utf8.h"
 #include "call.h"
 #include "objects.h"
 #include "exception.h"
+#include <stdlib.h>
+#include <string.h>
 #include "verify.h"
 #include <string.h>
 #include <stdio.h>
@@ -397,7 +398,7 @@ static int loadClassUsingDefaultLoader(JNIEnv *env, waterClass *class,
 		(char *)malloc(strlen(classpath_entries[i]) + 
 			       1 +                           /* '/' */
 			       strlen(name) + 
-			       6 +                           /* ".class" */ 
+			       6 +                           /* ".clazz" */ 
 			       1                             /* '\0' */);
 	    if(!class_file_name) {
 		water_throwException(WATER_ENV(env), 
@@ -409,7 +410,7 @@ static int loadClassUsingDefaultLoader(JNIEnv *env, waterClass *class,
 	    strcpy(class_file_name, classpath_entries[i]);
 	    strcat(class_file_name, "/");
 	    strcat(class_file_name, name);
-	    strcat(class_file_name, ".class");
+	    strcat(class_file_name, ".clazz");
 	    
 	    if(PR_GetFileInfo(class_file_name, &info) != PR_SUCCESS) {
 		/* not an error, it's just not here. */
@@ -566,7 +567,7 @@ static int loadClass(JNIEnv *env, waterClass *class,
 
     class->state = CLASS_PARTIALLY_LOADED;
 
-    /* here we parse out a Java .class file. */
+    /* here we parse out a Java .clazz file. */
     pos = 0;
 
     /* check the magic--0xcafebabe */
@@ -613,7 +614,7 @@ static int loadClass(JNIEnv *env, waterClass *class,
 	case CONSTANT_CLASS_TAG:
 	    /* a reference to a class, expressed as the index of the class's */
 	    /* name in the constant pool.                                    */
-	    GET_SHORT(constant->value.class.class_index, buf, buflen, pos);
+	    GET_SHORT(constant->value.clazz.class_index, buf, buflen, pos);
 	    break;
 
 	case CONSTANT_FIELDREF_TAG:
@@ -1053,14 +1054,14 @@ waterClass *water_resolveClassReference(JNIEnv *env,
 					waterClass *class, 
 					waterConstantReference *ref)
 {
-    if(ref->resolved.class)
-	return ref->resolved.class;
+    if(ref->resolved.clazz)
+	return ref->resolved.clazz;
 
-    ref->resolved.class =
-	water_resolveClassByIndex(env, class, ref->class_index,
+    ref->resolved.clazz =
+	water_resolveClassByIndex(env, class, ref->clazz_index,
 				  CLASS_VERIFIED);
 
-    return ref->resolved.class;
+    return ref->resolved.clazz;
 }
 
 waterClass *water_resolveClassByIndex(JNIEnv *env, waterClass *class, 
@@ -1092,10 +1093,10 @@ waterMethod *water_resolveMethodReference(JNIEnv *env,
     if(ref->resolved.method)
 	return ref->resolved.method;
 
-    if(!ref->resolved.class)
+    if(!ref->resolved.clazz)
 	water_resolveClassReference(env, class, ref);
     /* EXCEPTION */
-    if(!ref->resolved.class)
+    if(!ref->resolved.clazz)
 	return 0;
 
     method_name = 
@@ -1107,7 +1108,7 @@ waterMethod *water_resolveMethodReference(JNIEnv *env,
 			      class->constant_pool[ref->name_and_type_index].
 			      value.name_and_type.descriptor_index);
     ref->resolved.method = 
-	water_virtualMethodLookup(ref->resolved.class, 
+	water_virtualMethodLookup(ref->resolved.clazz, 
 				  method_name, method_descriptor);
     if(!ref->resolved.method) {
 	/* EXCEPTION: no method found */
@@ -1143,7 +1144,7 @@ waterMethod *water_resolveMethodReference(JNIEnv *env,
     /* the only problem is dealing with inherited, non-overridden     */
     /* constructors.  in this case we do need to find the deepest     */
     /* child and initialize it.                                       */
-    if(water_raiseState(env, ref->resolved.method->class, 
+    if(water_raiseState(env, ref->resolved.method->clazz, 
 			CLASS_INITIALIZED, 0, 0) < 0) {
 	return 0;
     }
@@ -1179,14 +1180,14 @@ waterField *water_resolveFieldReference(JNIEnv *env, waterClass *class,
     if(ref->resolved.field)
 	return ref->resolved.field;
 
-    if(!ref->resolved.class)
+    if(!ref->resolved.clazz)
 	water_resolveClassReference(env, class, ref);
     /* EXCEPTION: check for one */
-    if(!ref->resolved.class)
+    if(!ref->resolved.clazz)
 	return 0;
 
     ref->resolved.field = 
-	findField(env, ref->resolved.class, 
+	findField(env, ref->resolved.clazz, 
    	    water_getUTF8Constant(class,
  			 class->constant_pool[ref->name_and_type_index].
 				  value.name_and_type.name_index));
@@ -1201,7 +1202,7 @@ waterField *water_resolveFieldReference(JNIEnv *env, waterClass *class,
        !((ref->resolved.field->access_flags & ACC_STATIC) &&
 	 (ref->resolved.field->access_flags & ACC_FINAL) &&
 	 (ref->resolved.field->constant_value_initialized))) {
-	if(water_raiseState(env, ref->resolved.field->class, 
+	if(water_raiseState(env, ref->resolved.field->clazz, 
 			    CLASS_INITIALIZED, 0, 0) < 0) {
 	    return 0;
 	}
@@ -1227,7 +1228,7 @@ waterUTF8String *water_getClassName(waterClass *class, jshort pool_index)
 {
     return 
 	water_getUTF8Constant(class,
-            class->constant_pool[pool_index].value.class.class_index);
+            class->constant_pool[pool_index].value.clazz.class_index);
 }
 
 
@@ -1358,7 +1359,7 @@ static int prepareClass(JNIEnv *env, waterClass *class)
 
 	field->resolved.field = resolved_field;
 	resolved_field->name = water_getUTF8Constant(class, field->name_index);
-	resolved_field->class = class;
+	resolved_field->clazz = class;
 	resolved_field->access_flags = field->access_flags;
 	resolved_field->constant_value_initialized = 0;
 	if(field_descriptor[0] == 'D' ||
@@ -1475,7 +1476,7 @@ static int prepareClass(JNIEnv *env, waterClass *class)
 	    }
 	    entry = &class->method_table[class->method_table_entries - 1];
 	    entry->index = class->method_table_entries - 1;
-	    entry->class = class;
+	    entry->clazz = class;
 	    entry->childmost_class = class;
 	    entry->name = method_name;
 	    entry->descriptor = method_descriptor;
@@ -1529,7 +1530,7 @@ static int prepareClass(JNIEnv *env, waterClass *class)
 	} else {
 	    /* the parent had this method, too.  just substitute our */
 	    /* different code.                                       */
-	    entry->class = class;
+	    entry->clazz = class;
 	    entry->code = code;
 
 	    /* force the native code to be looked up again for the child */
@@ -1648,7 +1649,7 @@ static void setConstantValue(waterField *field,
 			     waterConstantValueAttribute *constant_value)
 {
     COPY_BYTES_BIGENDIAN(&field->value, 
-			 &field->class->constant_pool
+			 &field->clazz->constant_pool
 			 [constant_value->constantvalue_index].value,
 			 field->width * 4);
 
@@ -1878,9 +1879,9 @@ void water_linkNativeMethod(JNIEnv *env, waterMethod *method)
 
     assert(env != 0);
     assert(method != 0);
-    assert(method->class != 0);
+    assert(method->clazz != 0);
 
-    class = method->class;
+    class = method->clazz;
     while(class) {
 	mangled_method_name = mangledMethodName(env, class, method);
 	/* XXX check for malloc failure */
@@ -2049,11 +2050,11 @@ struct waterObject *water_findClassObjectClass(JNIEnv *env,
 {
     assert(class != 0);
 
-    if(!class->class_object) {
-	class->class_object = water_newJavaLangClass(env, class);
+    if(!class->clazz_object) {
+	class->clazz_object = water_newJavaLangClass(env, class);
     }
 
-    return class->class_object;
+    return class->clazz_object;
 }
 
 
@@ -2088,7 +2089,7 @@ waterClass *water_getPrimitiveClass(JNIEnv *env, int jni_type)
 				 "java/lang/OutOfMemoryError");
 	    return 0;
 	}
-	(*class_slot)->class_type = base_jni_type;
+	(*class_slot)->clazz_type = base_jni_type;
     }
 
     if(jni_type & JNI_IS_ARRAY) {
@@ -2127,19 +2128,19 @@ waterClass *water_getCorrespondingArrayClass(JNIEnv *env, waterClass *class)
     assert(WATER_ENV(env)->java_lang_object_class != 0);
     memcpy(new_array_class, WATER_ENV(env)->java_lang_object_class, 
 	   sizeof(waterClass));
-    if(class->class_type == 0 ||
-       (class->class_type & JNI_IS_ARRAY)) {
+    if(class->clazz_type == 0 ||
+       (class->clazz_type & JNI_IS_ARRAY)) {
 	/* array of a non-primitive type, or */
 	/* array of arrays. */
-	new_array_class->class_type = JNI_OBJECT_ARRAY;
+	new_array_class->clazz_type = JNI_OBJECT_ARRAY;
     } else {
 	/* array of a primitive type. */
-	new_array_class->class_type = class->class_type | JNI_IS_ARRAY;
+	new_array_class->clazz_type = class->clazz_type | JNI_IS_ARRAY;
     }
 
     new_array_class->resolved_superclass = 
 	WATER_ENV(env)->java_lang_object_class;
-    new_array_class->class_object = 0;
+    new_array_class->clazz_object = 0;
 
     class->array_class = new_array_class;
     new_array_class->elements_class = class;
@@ -2205,7 +2206,7 @@ int water_arrayDimensions(JNIEnv *env, waterClass *class)
     int count;
     waterClass *elements_class;
 
-    assert(class->class_type & JNI_IS_ARRAY);
+    assert(class->clazz_type & JNI_IS_ARRAY);
 
     elements_class = class->elements_class;
     count = 0;
@@ -2254,14 +2255,14 @@ int water_castIsOK(water_JNIEnv *wenv, waterClass *target, waterClass *source)
 	return 0;
     }
 
-    if(source->class_type == 0 &&
+    if(source->clazz_type == 0 &&
        !(source->access_flags & ACC_INTERFACE)) {
 	/* if R is a class type: */
-	if(target->class_type == 0 &&
+	if(target->clazz_type == 0 &&
 	   !(target->access_flags & ACC_INTERFACE)) {
 	    /* if T is a class type: */
 	    return water_isSuperclass((JNIEnv *)wenv, target, source);
-	} else if(target->class_type == 0 &&
+	} else if(target->clazz_type == 0 &&
 		  (target->access_flags & ACC_INTERFACE)) {
 	    /* if T is an interface type: */
 	    return water_implementsInterface((JNIEnv *)wenv, target, source);
@@ -2269,15 +2270,15 @@ int water_castIsOK(water_JNIEnv *wenv, waterClass *target, waterClass *source)
 	    /* T must not be an array type. */
 	    return 0;
 	}   
-    } else if(source->class_type == 0 &&
+    } else if(source->clazz_type == 0 &&
 	      (source->access_flags & ACC_INTERFACE)) {
 	/* if R is an interface: */
-	if(target->class_type == 0 &&
+	if(target->clazz_type == 0 &&
 	   !(target->access_flags & ACC_INTERFACE)) {
 	    /* if T is a class type: */
 	    /* T must be java.lang.Object. */
 	    return target == wenv->java_lang_object_class;
-	} else if(target->class_type == 0 &&
+	} else if(target->clazz_type == 0 &&
 		  (target->access_flags & ACC_INTERFACE)) {
 	    /* if T is an interface: */
 	    /* T must be a superinterface of R. */
@@ -2286,22 +2287,22 @@ int water_castIsOK(water_JNIEnv *wenv, waterClass *target, waterClass *source)
 	    /* T must not be an array type. */
 	    return 0;
 	}
-    } else if(source->class_type & JNI_IS_ARRAY) {
+    } else if(source->clazz_type & JNI_IS_ARRAY) {
 	/* if R is a class representing an array type RC[]: */
-	if(target->class_type == 0 &&
+	if(target->clazz_type == 0 &&
 	   !(target->access_flags & ACC_INTERFACE)) {
 	    /* if T is a class type: */
 	    /* T must be java.lang.Object. */
 	    return target == wenv->java_lang_object_class;
-	} else if(target->class_type == 0 &&
+	} else if(target->clazz_type == 0 &&
 		  (target->access_flags & ACC_INTERFACE)) {
 	    /* if T is an interface type: */
 	    /* T must be java.lang.Cloneable. */
 	    return target == wenv->java_lang_cloneable_interface;
-	} else if(target->class_type & JNI_IS_ARRAY) {
+	} else if(target->clazz_type & JNI_IS_ARRAY) {
 	    /* if T is a class representing an array type TC[]: */
-	    if(target->class_type == source->class_type) {
-		if(target->class_type != JNI_OBJECT_ARRAY) {
+	    if(target->clazz_type == source->clazz_type) {
+		if(target->clazz_type != JNI_OBJECT_ARRAY) {
 		    return 1;
 		} else {
 		    /* compare the classes of the elements. */

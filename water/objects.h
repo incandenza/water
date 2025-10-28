@@ -2,7 +2,7 @@
  * water
  * a Java virtual machine
  * 
- * Copyright (C) 1998-2010 Dan McGuirk <mcguirk@gmail.com>
+ * Copyright (C) 1998-2025 Dan McGuirk <mcguirk@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -235,7 +235,7 @@ jstring water_jni_NewStringUTF(JNIEnv *env, const char *bytes);
 jsize water_jni_GetStringUTFLength(JNIEnv *env, jstring string);
 const char *water_jni_GetStringUTFChars(JNIEnv *env, jstring string, 
 					jboolean *isCopy);
-void water_jni_ReleaseStringUTFChars(JNIEnv *env, jstring string, char *utf);
+void water_jni_ReleaseStringUTFChars(JNIEnv *env, jstring string, const char *utf);
 jarray water_jni_NewObjectArray(JNIEnv *env, jsize length, 
 				jclass elementClass, jobject initialElement);
 jobject water_jni_GetObjectArrayElement(JNIEnv *env, 

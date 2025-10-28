@@ -1,8 +1,14 @@
+#include <stdlib.h>
+#include <string.h>
+
+/* NSPR stub declarations */
+typedef void* PRMonitor;
+PRMonitor *PR_NewMonitor(void);
 /*
  * water
  * a Java virtual machine
  * 
- * Copyright (C) 1998-2010 Dan McGuirk <mcguirk@gmail.com>
+ * Copyright (C) 1998-2025 Dan McGuirk <mcguirk@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -510,9 +516,9 @@ const char *water_jni_GetStringUTFChars(JNIEnv *env, jstring string,
     return utf_chars;
 }
 
-void water_jni_ReleaseStringUTFChars(JNIEnv *env, jstring string, char *utf)
+void water_jni_ReleaseStringUTFChars(JNIEnv *env, jstring string, const char *utf)
 {
-    free(utf);
+    free((void *)utf);
 }
 
 jobject water_jni_GetObjectArrayElement(JNIEnv *env, 

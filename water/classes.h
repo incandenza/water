@@ -2,7 +2,7 @@
  * water
  * a Java virtual machine
  * 
- * Copyright (C) 1998-2010 Dan McGuirk <mcguirk@gmail.com>
+ * Copyright (C) 1998-2025 Dan McGuirk <mcguirk@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -30,7 +30,6 @@
 #define __classes_h
 
 #include "jni.h"
-#include "nspr.h"
 #include "utf8.h"
 
 /* yes, these numbers are a little weird */
@@ -59,7 +58,7 @@ typedef struct waterConstantReference {
 
     /* stuff we figure out */
     struct {
-	struct waterClass *class;
+	struct waterClass *clazz;
 	struct waterField *field;
 	struct waterMethod *method;
     } resolved;
@@ -78,7 +77,7 @@ typedef struct waterConstantPoolEntry {
     jbyte tag;
 
     union {
-	waterConstantClass class;
+	waterConstantClass clazz;
 	waterConstantReference reference;
 	waterConstantString string;
 	jint int_value;
@@ -162,7 +161,7 @@ typedef struct waterAttribute {
 } waterAttribute;
 
 typedef struct waterField {
-    struct waterClass *class;
+    struct waterClass *clazz;
     waterUTF8String *name;
     jshort access_flags;
     int width;
@@ -176,7 +175,7 @@ typedef struct waterField {
 
 typedef struct waterMethod {
     jshort index;
-    struct waterClass *class;
+    struct waterClass *clazz;
     struct waterClass *childmost_class;
     waterUTF8String *name;
     waterUTF8String *descriptor;
@@ -341,41 +340,41 @@ waterClass *water_findClass(JNIEnv *env, struct waterObject *class_loader,
 			    const char *name, int desired_state,
 			    const char *buf, int buflen);
 waterClass *water_resolveClassReference(JNIEnv *env,
-					waterClass *class, 
+					waterClass *clazz, 
 					waterConstantReference *ref);
 waterMethod *water_resolveMethodReference(JNIEnv *env,
-					  waterClass *class, 
+					  waterClass *clazz, 
 					  waterConstantReference *ref);
-waterField *water_resolveFieldReference(JNIEnv *env, waterClass *class,
+waterField *water_resolveFieldReference(JNIEnv *env, waterClass *clazz,
 					waterConstantReference *ref);
-waterClass *water_resolveClassByIndex(JNIEnv *env, waterClass *class, 
+waterClass *water_resolveClassByIndex(JNIEnv *env, waterClass *clazz, 
 				      jshort class_index, int desired_state);
-void water_freeClass(waterClass *class);
+void water_freeClass(waterClass *clazz);
 void water_linkNativeMethod(JNIEnv *env, waterMethod *method);
-waterUTF8String *water_getClassName(waterClass *class, jshort pool_index);
+waterUTF8String *water_getClassName(waterClass *clazz, jshort pool_index);
 int water_isSuperclass(JNIEnv *env, waterClass *parent, waterClass *child);
 int water_implementsInterface(JNIEnv *env, 
-			      waterClass *interface, waterClass *class);
+			      waterClass *interface, waterClass *clazz);
 struct waterObject *water_findClassObjectString(JNIEnv *env, const char *name);
 struct waterObject *water_findClassObjectClass(JNIEnv *env,
-					       struct waterClass *class);
+					       struct waterClass *clazz);
 waterClass *water_getPrimitiveClass(JNIEnv *env, int jni_type);
-waterClass *water_getCorrespondingArrayClass(JNIEnv *env, waterClass *class);
+waterClass *water_getCorrespondingArrayClass(JNIEnv *env, waterClass *clazz);
 waterClass *water_getArrayClassByName(JNIEnv *env, const char *name,
 				      struct waterObject *class_loader,
 				      int desired_state);
-int water_arrayDimensions(JNIEnv *env, waterClass *class);
+int water_arrayDimensions(JNIEnv *env, waterClass *clazz);
 struct waterObject *water_getPrimitiveClassObject(JNIEnv *env, int jni_type);
 int water_castIsOK(water_JNIEnv *wenv, waterClass *target, waterClass *source);
 void water_loadDefaultNatives(water_JavaVM *vm);
 int water_loadNativeLibrary(water_JavaVM *vm, const char *name);
 struct waterObject *water_getThreadObject(JNIEnv *env);
-waterMethod *water_virtualMethodLookup(waterClass *class,
+waterMethod *water_virtualMethodLookup(waterClass *clazz,
 				       waterUTF8String *method_name,
 				       waterUTF8String *method_descriptor);
-waterUTF8String *water_getUTF8Constant(waterClass *class, jshort pool_index);
+waterUTF8String *water_getUTF8Constant(waterClass *clazz, jshort pool_index);
 char **water_getClassPathEntries(JNIEnv *env);
-int water_raiseState(JNIEnv *env, waterClass *class, int desired_state,
+int water_raiseState(JNIEnv *env, waterClass *clazz, int desired_state,
 		     const char *buf, int buflen);
 
 #endif

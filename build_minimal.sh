@@ -120,6 +120,11 @@ gcc -c -g -w -DXP_UNIX -DDARWIN -DMACOSX \
     -I. -I../include \
     -o Darwin25.1.0_x86_64_DBG.OBJ/water.o water.c
 
+gcc -c -g -w -DXP_UNIX -DDARWIN -DMACOSX \
+    -I../dist/Darwin25.1.0_x86_64_DBG.OBJ/include \
+    -I. -I../include \
+    -o Darwin25.1.0_x86_64_DBG.OBJ/create.o create.c
+
 # Compile NSPR stubs
 gcc -c -g -w -DXP_UNIX -DDARWIN -DMACOSX \
     -I../dist/Darwin25.1.0_x86_64_DBG.OBJ/include \
@@ -133,6 +138,7 @@ gcc -g -o ../dist/Darwin25.1.0_x86_64_DBG.OBJ/water \
     Darwin25.1.0_x86_64_DBG.OBJ/globals.o \
     Darwin25.1.0_x86_64_DBG.OBJ/utf8.o \
     Darwin25.1.0_x86_64_DBG.OBJ/water.o \
+    Darwin25.1.0_x86_64_DBG.OBJ/create.o \
     Darwin25.1.0_x86_64_DBG.OBJ/nspr_stubs.o \
     -lm
 

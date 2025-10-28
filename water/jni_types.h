@@ -2,7 +2,7 @@
  * water
  * a Java virtual machine
  * 
- * Copyright (C) 1998-2010 Dan McGuirk <mcguirk@gmail.com>
+ * Copyright (C) 1998-2025 Dan McGuirk <mcguirk@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -29,7 +29,43 @@
 #ifndef __jni_types_h
 #define __jni_types_h
 
-#include "nspr.h"
+/* NSPR type definitions */
+#include <stdint.h>
+#include <stdarg.h>
+#include <stdio.h>
+
+typedef uint8_t   PRUint8;
+typedef int8_t    PRInt8;
+typedef uint16_t  PRUint16;
+typedef int16_t   PRInt16;
+typedef int32_t   PRInt32;
+typedef int64_t   PRInt64;
+typedef uint32_t  PRUint32;
+typedef uint64_t  PRUint64;
+typedef double    PRFloat64;
+typedef void*     PRMonitor;
+typedef struct { int dummy; } PRThread;
+
+/* NSPR stub definitions */
+typedef struct { 
+    int type;
+    int size; 
+} PRFileInfo;
+
+typedef struct { int dummy; } PRFileDesc;
+
+#define PR_SUCCESS 0
+#define PR_FILE_FILE 1
+#define PR_FILE_DIRECTORY 2
+#define PR_RDONLY 0x01
+
+/* NSPR function stubs */
+static inline int PR_GetFileInfo(const char *name, PRFileInfo *info) { return -1; }
+static inline void *PR_Open(const char *name, int flags, int mode) { return NULL; }
+static inline int PR_Read(void *fd, void *buf, int len) { return -1; }
+static inline int PR_Close(void *fd) { return -1; }
+static inline void PR_EnterMonitor(void *monitor) {}
+static inline void PR_ExitMonitor(void *monitor) {}
 
 /* use the types from the NSPR */
 typedef PRUint8   jboolean;

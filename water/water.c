@@ -2,7 +2,7 @@
  * water
  * a Java virtual machine
  * 
- * Copyright (C) 1998-2010 Dan McGuirk <mcguirk@gmail.com>
+ * Copyright (C) 1998-2025 Dan McGuirk <mcguirk@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -26,7 +26,11 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#include <jni.h>
+#include "jni.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 int main(int argc, char *argv[]) 
 {
